@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE WU - ระบบงบลงทุนและแผนจัดซื้อจัดจ้าง 2570</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body class="dark-theme"> <!-- Default dark-theme for premium aesthetics -->
+
+    <!-- Header Section -->
+    <header class="glass-panel">
+        <div class="logo-container">
+            <span class="hamburger-menu" style="font-size: 1.8rem; font-weight: bold; cursor: pointer; color: var(--text-primary); margin-right: 12px; line-height: 1;">≡</span>
+            <img src="logo.png" alt="CSE Walailak University Logo" onerror="this.style.display='none'">
+            <div class="header-title">
+                <h1>ระบบติดตามงบประมาณ</h1>
+                <p>ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยวลัยลักษณ์</p>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="header-nav">
+            <a href="#" class="nav-link">หน้าหลัก</a>
+            <a href="#timeline-section" class="nav-link">แผนการจัดซื้อจัดจ้าง</a>
+            <a href="#data-section" class="nav-link">ข้อมูลรายการครุภัณฑ์</a>
+        </nav>
+
+        <div class="header-actions">
+            <div class="date-badge" id="current-date-badge">
+                <span class="date-icon">📅</span>
+                <span id="date-string">1 กรกฎาคม 2569</span>
+            </div>
+            <!-- Theme Toggle Switch -->
+            <div class="theme-switch" id="theme-toggle" title="สลับโหมด มืด/สว่าง">
+                <div class="theme-switch-thumb">🌙</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Timeline Section -->
+        <section class="timeline-section glass-panel" id="timeline-section">
+            <div class="section-header">
+                <h2>
+                    <span>⏰</span> แผนการจัดซื้อจัดจ้าง งบลงทุนประจำปีงบประมาณ พ.ศ. 2570
+                </h2>
+                <!-- Stepper Banner (Replaces orange banner) -->
+                <div class="stepper-banner" id="stepper-banner">
+                    <!-- Step 6 -->
+                    <div class="stepper-step step-6">
+                        <div class="step-badge">6</div>
+                        <div class="step-info">
+                            <span class="step-date">ก.ค. 69</span>
+                            <span class="step-title">พิจารณาร่าง พ.ร.บ. งบประมาณ</span>
+                        </div>
+                    </div>
+                    <!-- Step 7 -->
+                    <div class="stepper-step step-7">
+                        <div class="step-badge">7</div>
+                        <div class="step-info">
+                            <span class="step-date">ก.ค. 69</span>
+                            <span class="step-title">ชี้แจงงบประมาณ</span>
+                        </div>
+                    </div>
+                    <!-- Step 8 -->
+                    <div class="stepper-step step-8">
+                        <div class="step-badge">8</div>
+                        <div class="step-info">
+                            <span class="step-date">ก.ค. - ส.ค. 69</span>
+                            <span class="step-title">จัดทำเอกสารและ Spec</span>
+                        </div>
+                    </div>
+                    <!-- Step 9 -->
+                    <div class="stepper-step step-9">
+                        <div class="step-badge">9</div>
+                        <div class="step-info">
+                            <span class="step-date">1 ส.ค. 69</span>
+                            <span class="step-title">เริ่มออก PR แบบ manual</span>
+                        </div>
+                    </div>
+                    <!-- Step 10 -->
+                    <div class="stepper-step step-10">
+                        <div class="step-badge">10</div>
+                        <div class="step-info">
+                            <span class="step-date">31 ส.ค. 69</span>
+                            <span class="step-title">วันสุดท้ายการส่ง Spec</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Visual Timeline Slider -->
+            <div class="timeline-tracker" id="timeline-container">
+                <!-- Will be dynamically populated by app.js -->
+            </div>
+        </section>
+
+        <!-- Metrics Overview Section -->
+        <section class="metrics-grid">
+            
+            <div class="metric-card glass-panel card-tech">
+                <div class="metric-header">
+                    <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
+                    <div class="metric-icon">🔬</div>
+                </div>
+                <div class="metric-value" id="val-tech-budget">0.00 ฿</div>
+                <div class="metric-subtext" id="val-tech-count">0 รายการ</div>
+            </div>
+
+            <div class="metric-card glass-panel card-health">
+                <div class="metric-header">
+                    <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
+                    <div class="metric-icon">🏥</div>
+                </div>
+                <div class="metric-value" id="val-health-budget">0.00 ฿</div>
+                <div class="metric-subtext" id="val-health-count">0 รายการ</div>
+            </div>
+
+            <div class="metric-card glass-panel card-total">
+                <div class="metric-header">
+                    <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
+                    <div class="metric-icon">💰</div>
+                </div>
+                <div class="metric-value" id="val-total-budget">0.00 ฿</div>
+                <div class="metric-subtext" id="val-total-count">0 รายการ (เฉลี่ย 0 ฿ ต่อชิ้น)</div>
+            </div>
+
+        </section>
+
+        <!-- Charts Grid Section -->
+        <section class="charts-grid">
+            
+            <div class="chart-card glass-panel">
+                <h3 class="chart-title">สัดส่วนงบประมาณแยกตามสาขา (Budget Share)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="chart-share"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card glass-panel">
+                <h3 class="chart-title">งบประมาณรวมสูงสุด 5 อันดับแรกแยกตามหน่วยงาน/สำนักวิชา</h3>
+                <div class="chart-wrapper">
+                    <canvas id="chart-schools"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Data Grid & Explorer Section -->
+        <section class="data-section glass-panel" id="data-section">
+            
+            <div class="section-header">
+                <h2><span>🔍</span> รายการครุภัณฑ์ทั้งหมด</h2>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="filter-bar">
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="search-input" placeholder="ค้นหาตามชื่อครุภัณฑ์, ผู้ขอ, ผู้รับผิดชอบ Spec หรือสถานที่ตั้ง...">
+                </div>
+
+                <select class="filter-select" id="filter-type">
+                    <option value="">กลุ่มงบประมาณทั้งหมด</option>
+                    <option value="science_tech">วิทยาศาสตร์และเทคโนโลยี</option>
+                    <option value="science_health">วิทยาศาสตร์สุขภาพ</option>
+                </select>
+
+                <select class="filter-select" id="filter-faculty">
+                    <option value="">หน่วยงาน/สำนักวิชาทั้งหมด</option>
+                    <!-- Will be dynamically populated -->
+                </select>
+
+                <button class="btn-clear" id="btn-clear-filters">
+                    <span>🔄</span> ล้างตัวกรอง
+                </button>
+            </div>
+
+            <!-- Budget Table -->
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="th-priority" class="text-center" style="width: 80px;">ลำดับ <span class="sort-icon"></span></th>
+                            <th id="th-type" class="text-center" style="width: 130px;">ประเภทงบ <span class="sort-icon"></span></th>
+                            <th id="th-name">ชื่อรายการครุภัณฑ์ <span class="sort-icon"></span></th>
+                            <th id="th-faculty">หน่วยงาน/สำนักวิชา <span class="sort-icon"></span></th>
+                            <th id="th-qty" class="text-center" style="width: 80px;">จำนวน <span class="sort-icon"></span></th>
+                            <th id="th-price" class="number-col" style="width: 140px;">ราคาต่อหน่วย <span class="sort-icon"></span></th>
+                            <th id="th-total" class="number-col" style="width: 150px;">ราคารวม <span class="sort-icon"></span></th>
+                            <th id="th-requester" style="width: 160px;">ผู้เสนอขอ <span class="sort-icon"></span></th>
+                            <th id="th-specmaker" style="width: 160px;">ผู้รับผิดชอบ Spec <span class="sort-icon"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Will be dynamically populated by app.js -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="pagination">
+                <div class="pagination-info" id="pagination-info">
+                    กำลังแสดงรายการที่ 0-0 จากทั้งหมด 0 รายการ
+                </div>
+                <div class="pagination-buttons">
+                    <button class="btn-page" id="btn-prev" disabled>ก่อนหน้า</button>
+                    <button class="btn-page" id="btn-next" disabled>ถัดไป</button>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="app-footer">
+        <p>ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยวลัยลักษณ์ · ระบบติดตามงบประมาณ</p>
+        <p class="developer-credit">พัฒนาโดยสุนันทา อาดหมาด ฝ่ายบริหารทั่วไปและธุรการ</p>
+    </footer>
+
+    <!-- Details Modal Overlay -->
+    <div class="modal-overlay" id="modal-detail">
+        <div class="modal-content glass-panel">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            
+            <div class="modal-title-area">
+                <span class="badge" id="modal-badge-type">วิทยาศาสตร์สุขภาพ</span>
+                <h3 id="modal-item-name">เครื่องถ่ายและวิเคราะห์ภาพเจล (Gel documentation system)</h3>
+            </div>
+
+            <!-- 2x2 Grid Info -->
+            <div class="modal-grid-info">
+                <div class="info-item">
+                    <div class="info-label">สำนักวิชา / หน่วยงาน</div>
+                    <div class="info-value" id="modal-faculty">วิทยาลัยสัตวแพทยศาสตร์อัครราชกุมารี</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">จำนวนครุภัณฑ์</div>
+                    <div class="info-value" id="modal-qty">1 เครื่อง</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">ราคารวมทั้งสิ้น</div>
+                    <div class="info-value" id="modal-total-price">650,000.00 ฿</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">สถานที่ติดตั้ง</div>
+                    <div class="info-value" id="modal-location">อาคารศูนย์ชันสูตรโรคสัตว์ ชั้น 1</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">ผู้เสนอโครงการ (อาจารย์)</div>
+                    <div class="info-value" id="modal-requester">รศ.ดร. น.สพ.ชัยเทพ พูลเขตต์</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">ผู้จัดทำคุณลักษณะเฉพาะ (Spec)</div>
+                    <div class="info-value" id="modal-spec-maker">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">ความเร่งด่วน / ความจำเป็น</div>
+                    <div class="info-value" id="modal-need-type">ไม่มีของเดิม</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">สถานะของครุภัณฑ์เดิม</div>
+                    <div class="info-value" id="modal-existing-status">-</div>
+                </div>
+            </div>
+
+            <!-- Description justification -->
+            <div class="modal-desc-block">
+                <h4>เหตุผลและความจำเป็นเพิ่มเติม</h4>
+                <div class="modal-desc-content" id="modal-need-detail">
+                    เนื่องจากมีความจำเป็นต้องใช้สำหรับการเรียนการสอนและงานบริการวิชาการของศูนย์วินิจฉัยโรคสัตว์...
+                </div>
+            </div>
+
+            <!-- Vendor Price comparison -->
+            <div class="quotes-area">
+                <h4>ตารางเปรียบเทียบใบเสนอราคา (3 บริษัท)</h4>
+                <div class="quotes-grid" id="modal-quotes-grid">
+                    <!-- Cards will be dynamically inserted -->
+                </div>
+            </div>
+
+            <!-- Link references -->
+            <div class="modal-links">
+                <a href="#" target="_blank" class="btn-link btn-link-quotation" id="modal-btn-quote" style="display: none;">
+                    <span>📄</span> เปิดดูใบเสนอราคาออนไลน์
+                </a>
+                <a href="#" target="_blank" class="btn-link btn-link-image" id="modal-btn-image" style="display: none;">
+                    <span>📷</span> เปิดดูรูปภาพครุภัณฑ์
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Data script followed by logic script -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
