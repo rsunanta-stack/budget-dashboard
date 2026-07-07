@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modalBadgeType: document.getElementById("modal-badge-type"),
         modalItemName: document.getElementById("modal-item-name"),
         modalFaculty: document.getElementById("modal-faculty"),
+        modalDepartment: document.getElementById("modal-department"),
         modalQty: document.getElementById("modal-qty"),
         modalTotalPrice: document.getElementById("modal-total-price"),
         modalLocation: document.getElementById("modal-location"),
@@ -629,6 +630,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Set text fields
         if (elements.modalItemName) elements.modalItemName.textContent = item.name;
         if (elements.modalFaculty) elements.modalFaculty.textContent = item.faculty || "-";
+        if (elements.modalDepartment) elements.modalDepartment.textContent = item.department || "-";
         if (elements.modalQty) elements.modalQty.textContent = `${item.quantity} ${item.unit}`;
         if (elements.modalTotalPrice) elements.modalTotalPrice.textContent = `${formatNumber(item.totalPrice)} ฿`;
         if (elements.modalLocation) elements.modalLocation.textContent = item.location || "-";
