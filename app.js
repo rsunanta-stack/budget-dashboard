@@ -783,11 +783,11 @@ document.addEventListener("DOMContentLoaded", () => {
             unitPrice: 6,
             totalPrice: 7,
             requester: 19,
-            specMaker: isTech ? 25 : 20,
-            department: isTech ? 20 : 21,
-            image: isTech ? 21 : 22,
-            faculty: isTech ? 22 : 23,
-            link: isTech ? 23 : 24
+            specMaker: 20,
+            department: 21,
+            image: 22,
+            faculty: 23,
+            link: 24
         });
 
         for (let r = startIndex; r < rows.length; r++) {
@@ -838,21 +838,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const price3 = parsePrice(cells[18]);
             const requester = cleanText(cells[19]);
 
-            // Shift mapping branching for specific trailing fields
-            let specMaker, department, image, faculty, link;
-            if (isTech) {
-                department = cleanText(cells[20]);
-                image = cleanText(cells[21]);
-                faculty = cleanText(cells[22]);
-                link = cleanText(cells[23]);
-                specMaker = cleanText(cells[25]);
-            } else {
-                specMaker = cleanText(cells[20]);
-                department = cleanText(cells[21]);
-                image = cleanText(cells[22]);
-                faculty = cleanText(cells[23]);
-                link = cleanText(cells[24]);
-            }
+            // Trailing columns (indices 20 to 24) are identical in both sheets
+            const specMaker = cleanText(cells[20]);
+            const department = cleanText(cells[21]);
+            const image = cleanText(cells[22]);
+            const faculty = cleanText(cells[23]);
+            const link = cleanText(cells[24]);
 
             // Parent Item: Priority (Col A) is a valid numeric value
             const isParent = priority !== "" && !isNaN(parseFloat(priority)) && isFinite(priority);
