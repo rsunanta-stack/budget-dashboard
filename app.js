@@ -96,8 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
         modalExistingStatus: document.getElementById("modal-existing-status"),
         modalNeedDetail: document.getElementById("modal-need-detail"),
         modalQuotesGrid: document.getElementById("modal-quotes-grid"),
-        modalBtnQuote: document.getElementById("modal-btn-quote"),
-        modalBtnImage: document.getElementById("modal-btn-image"),
         modalBtnPdf: document.getElementById("modal-btn-pdf")
     };
 
@@ -200,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (elements.phaseAlertBox) {
                 elements.phaseAlertBox.innerHTML = `
                     <strong>สถานะระบบ:</strong> นอกเหนือระยะเวลาแผนงานจัดซื้อจัดจ้างงบลงทุนปี 2570 แล้ว<br>
-                    <span style="font-size: 0.85rem; opacity: 0.9;">สืบค้นประวัติขั้นตอนโดยการเลื่อนแถบด้านล่าง</span>
+                    <span style="font-size: 0.85rem; opacity: 0.9;">สืบค้นประชีพขั้นตอนโดยการเลื่อนแถบด้านล่าง</span>
                 `;
             }
         }
@@ -680,28 +678,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Quotation and image buttons
-        if (elements.modalBtnQuote) {
-            if (item.link) {
-                elements.modalBtnQuote.href = item.link;
-                elements.modalBtnQuote.style.display = 'flex';
-            } else {
-                elements.modalBtnQuote.style.display = 'none';
-            }
-        }
-
-        if (elements.modalBtnImage) {
-            if (item.image) {
-                elements.modalBtnImage.href = item.image;
-                elements.modalBtnImage.style.display = 'flex';
-            } else {
-                elements.modalBtnImage.style.display = 'none';
-            }
-        }
-
+        // Smart PDF/Spec link checking
         if (elements.modalBtnPdf) {
-            if (item.pdfLink) {
-                elements.modalBtnPdf.href = item.pdfLink;
+            let currentLink = item.pdfLink;
+            if (!currentLink && item.children && item.children.length > 0) {
+                currentLink = item.children.find(c => c.pdfLink)?.pdfLink;
+            }
+
+            if (currentLink) {
+                let formattedLink = currentLink;
+                if (!formattedLink.toLowerCase().startsWith('http')) {
+                    formattedLink = 'https://' + formattedLink;
+                }
+                elements.modalBtnPdf.href = formattedLink;
                 elements.modalBtnPdf.style.display = 'flex';
             } else {
                 elements.modalBtnPdf.style.display = 'none';
