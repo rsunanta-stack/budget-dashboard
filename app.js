@@ -1,33 +1,24 @@
 // JavaScript logic for CSE Walailak University Budget Dashboard
 
-// =========================================================================
-// GOOGLE SHEETS LIVE INTEGRATION CONFIGURATION (ตั้งค่าการเชื่อมต่อ Google Sheets)
-// =========================================================================
-// 1. SHEET_ID: รหัสของไฟล์ Google Sheets (ตัวอักษรและตัวเลขยาวๆ ใน URL ระหว่าง /d/ และ /edit)
-// 2. SHEET_NAME_1: ชื่อชีท (ชื่อแท็บ) แท็บที่ 1 ของวิทยาศาสตร์และเทคโนโลยี
-// 3. SHEET_NAME_2: ชื่อชีท (ชื่อแท็บ) แท็บที่ 2 ของวิทยาศาสตร์สุขภาพ
-// * หมายเหตุ: คุณต้องทำการแชร์ไฟล์ Google Sheets เป็น "ทุกคนที่มีลิงก์สามารถดูได้" (Anyone with the link can view) ด้วยนะครับ *
-// =========================================================================
-const SHEET_ID = "1TE7ksPMwn6xvt6yEt8j06IHvTtpfoqyLycqu0DvJmNo"; // รหัสไฟล์ Google Sheets ของคุณ
-const SHEET_NAME_1 = "วิทย์เทค(แบบแยก)";                        // ชื่อแท็บฝั่งวิทย์-เทค
-const SHEET_NAME_2 = "วิทย์สุข(แบบแยก)";                        // ชื่อแท็บฝั่งวิทย์-สุข
+const SHEET_ID = "1TE7ksPMwn6xvt6yEt8j06IHvTtpfoqyLycqu0DvJmNo";
+const SHEET_NAME_1 = "วิทย์เทค(แบบแยก)";
+const SHEET_NAME_2 = "วิทย์สุข(แบบแยก)";
 
 document.addEventListener("DOMContentLoaded", () => {
     
     const GOOGLE_SHEETS_CONFIG = {
-        enabled: true, // เปิดใช้งานดึงข้อมูลสดจาก Google Sheets ทันที
+        enabled: true,
         spreadsheetId: SHEET_ID,
         techSheetName: SHEET_NAME_1,
         healthSheetName: SHEET_NAME_2
     };
 
-    // 1. Initial State Setup
     const state = {
         items: [],
         filteredItems: [],
         currentPage: 1,
         pageSize: 10,
-        sortColumn: null, // Default to null to preserve the original sheet order
+        sortColumn: null,
         sortDirection: 'asc',
         filters: {
             search: '',
@@ -40,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // 2. DOM Elements
     const elements = {
         body: document.body,
         themeToggle: document.getElementById("theme-toggle"),
@@ -49,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
         phaseAlertBox: document.getElementById("phase-alert-box"),
         timelineContainer: document.getElementById("timeline-container"),
         
-        // Metrics
         valTechBudget: document.getElementById("val-tech-budget"),
         valTechCount: document.getElementById("val-tech-count"),
         valHealthBudget: document.getElementById("val-health-budget"),
@@ -57,19 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
         valTotalBudget: document.getElementById("val-total-budget"),
         valTotalCount: document.getElementById("val-total-count"),
         
-        // Filters
         searchInput: document.getElementById("search-input"),
         filterType: document.getElementById("filter-type"),
         filterFaculty: document.getElementById("filter-faculty"),
         btnClearFilters: document.getElementById("btn-clear-filters"),
         
-        // Table & Pagination
         tableBody: document.getElementById("table-body"),
         paginationInfo: document.getElementById("pagination-info"),
         btnPrev: document.getElementById("btn-prev"),
         btnNext: document.getElementById("btn-next"),
         
-        // Headers for sorting
         thPriority: document.getElementById("th-priority"),
         thType: document.getElementById("th-type"),
         thName: document.getElementById("th-name"),
@@ -80,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
         thRequester: document.getElementById("th-requester"),
         thSpecMaker: document.getElementById("th-specmaker"),
         
-        // Modal
         modalDetail: document.getElementById("modal-detail"),
         modalCloseBtn: document.getElementById("modal-close-btn"),
         modalBadgeType: document.getElementById("modal-badge-type"),
@@ -99,25 +84,20 @@ document.addEventListener("DOMContentLoaded", () => {
         modalBtnPdf: document.getElementById("modal-btn-pdf")
     };
 
-    // Today's actual date (Dynamic)
     const TODAY = new Date();
 
-    // 3. Format Helpers
     function formatCurrency(amount) {
         return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount);
     }
 
-    // Format numbers with commas (e.g. 1,000)
     function formatNumber(num) {
         return new Intl.NumberFormat('th-TH').format(num);
     }
 
-    // Alphanumeric sorting helper for priority column (handles 1, 2, 10, ENH 9 naturally)
     function naturalCompare(a, b) {
         return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
     }
 
-    // 4. Update Header Date
     function initDateHeader() {
         const thaiMonths = [
             "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
@@ -125,13 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
         const day = TODAY.getDate();
         const month = thaiMonths[TODAY.getMonth()];
-        const year = TODAY.getFullYear() + 543; // Convert AD to BE
+        const year = TODAY.getFullYear() + 543;
         if (elements.dateString) {
             elements.dateString.textContent = `${day} ${month} ${year}`;
         }
     }
 
-    // 5. Build Timeline
     function initTimeline() {
         if (elements.timelineContainer) {
             elements.timelineContainer.innerHTML = '';
@@ -139,7 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let activeStep = null;
         let activeStepIndex = -1;
 
-        // Clear time of TODAY for date-only comparison (midnight local time)
         const todayMidnight = new Date(TODAY.getTime());
         todayMidnight.setHours(0, 0, 0, 0);
 
@@ -147,14 +125,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const stepEl = document.createElement("div");
             stepEl.className = "timeline-step";
             
-            // Parse and clear time of start/end dates
             const start = new Date(step.startDate);
             start.setHours(0, 0, 0, 0);
             
             const end = new Date(step.endDate);
             end.setHours(0, 0, 0, 0);
             
-            let status = "pending"; // pending, active, completed
+            let status = "pending";
             
             if (todayMidnight > end) {
                 status = "completed";
@@ -177,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Center on active step
         if (activeStepIndex !== -1) {
             setTimeout(() => {
                 if (elements.timelineContainer) {
@@ -186,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, 100);
 
-            // Update alert banner
             if (elements.phaseAlertBox) {
                 elements.phaseAlertBox.innerHTML = `
                     <strong>ขั้นตอนปัจจุบัน:</strong> ขั้นตอนที่ ${activeStep.id} - ${activeStep.title} (${activeStep.date})<br>
@@ -194,17 +169,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             }
         } else {
-            // Fallback if no step is currently active
             if (elements.phaseAlertBox) {
                 elements.phaseAlertBox.innerHTML = `
                     <strong>สถานะระบบ:</strong> นอกเหนือระยะเวลาแผนงานจัดซื้อจัดจ้างงบลงทุนปี 2570 แล้ว<br>
-                    <span style="font-size: 0.85rem; opacity: 0.9;">สืบค้นประชีพขั้นตอนโดยการเลื่อนแถบด้านล่าง</span>
+                    <span style="font-size: 0.85rem; opacity: 0.9;">สืบค้นประวัติขั้นตอนโดยการเลื่อนแถบด้านล่าง</span>
                 `;
             }
         }
     }
 
-    // 6. Calculate and Update KPI Metrics (บวกเลขยอดรวมใหม่ด้วยโค้ด ห้ามดึงจากตารางสรุป)
     function updateKPIs() {
         let techBudget = 0;
         let techCount = 0;
@@ -234,7 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (elements.valTotalCount) elements.valTotalCount.textContent = `${formatNumber(totalCount)} รายการ`;
     }
 
-    // 7. Populating Filter Dropdowns dynamically
     function initFilterOptions() {
         if (!elements.filterFaculty) return;
         elements.filterFaculty.innerHTML = '<option value="">-- หน่วยงานทั้งหมด --</option>';
@@ -242,8 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         state.items.forEach(item => {
             if (item.faculty) faculties.add(item.faculty);
-            
-            // Also inspect child items for faculties
             if (item.children) {
                 item.children.forEach(child => {
                     if (child.faculty) faculties.add(child.faculty);
@@ -251,7 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Populate Faculty dropdown
         Array.from(faculties).sort().forEach(fac => {
             const opt = document.createElement("option");
             opt.value = fac;
@@ -260,9 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 8. Visualizations / Charts Rendering (using Chart.js)
     function renderCharts() {
-        // Destroy existing chart objects to prevent overlays
         if (state.charts.share) state.charts.share.destroy();
         if (state.charts.schools) state.charts.schools.destroy();
 
@@ -270,7 +237,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const textColor = isDark ? "#ECEAF5" : "#2d2645";
         const gridColor = isDark ? "rgba(126, 101, 194, 0.12)" : "rgba(89, 69, 140, 0.08)";
 
-        // Chart 1: Budget Share (using filtered parent budgets)
         let techSum = 0;
         let healthSum = 0;
         state.filteredItems.forEach(item => {
@@ -312,10 +278,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Chart 2: Top Schools by Budget (aggregating budgets based on child requests)
         const schoolBudgets = {};
         state.filteredItems.forEach(item => {
-            // If the item has children, aggregate by the child's faculty!
             if (item.filteredChildren && item.filteredChildren.length > 0) {
                 item.filteredChildren.forEach(child => {
                     if (!child.faculty) return;
@@ -381,24 +345,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 9. Table Rendering, Sorting, Pagination and Filtering
     function renderTable() {
         const tbody = elements.tableBody;
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        // Apply Hierarchical Filtering
         state.filteredItems = state.items.map(parent => {
             const searchLower = state.filters.search.toLowerCase();
             
-            // Check if parent itself matches the search query
             const matchesParentSearch = !state.filters.search || 
                 parent.name.toLowerCase().includes(searchLower) ||
                 parent.requester.toLowerCase().includes(searchLower) ||
                 parent.specMaker.toLowerCase().includes(searchLower) ||
                 parent.location.toLowerCase().includes(searchLower);
 
-            // Check if any of its children match the search query
             const matchingChildren = parent.children ? parent.children.filter(child => {
                 return !state.filters.search || 
                     child.name.toLowerCase().includes(searchLower) ||
@@ -410,16 +370,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const hasMatchingChildren = matchingChildren.length > 0;
             const matchesSearch = matchesParentSearch || hasMatchingChildren;
 
-            // Check category filter
             const matchesType = !state.filters.type || parent.type === state.filters.type;
 
-            // Check faculty filter
             const matchesFaculty = !state.filters.faculty || 
                 parent.faculty === state.filters.faculty || 
                 (parent.children && parent.children.some(child => child.faculty === state.filters.faculty));
 
             if (matchesSearch && matchesType && matchesFaculty) {
-                // If the filter specifies a faculty, we only show matching children!
                 const finalChildren = state.filters.faculty 
                     ? parent.children.filter(c => c.faculty === state.filters.faculty)
                     : (hasMatchingChildren ? matchingChildren : parent.children);
@@ -432,13 +389,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return null;
         }).filter(item => item !== null);
 
-        // Apply Sorting (Sorts parent rows)
         if (state.sortColumn) {
             state.filteredItems.sort((a, b) => {
                 let valA = a[state.sortColumn];
                 let valB = b[state.sortColumn];
 
-                // Handle natural alphanumeric sorting for Priority (Column A)
                 if (state.sortColumn === 'priority') {
                     valA = valA ? valA.toString() : "";
                     valB = valB ? valB.toString() : "";
@@ -447,23 +402,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         : naturalCompare(valB, valA);
                 }
 
-                // Text compare
                 if (typeof valA === 'string') {
                     return state.sortDirection === 'asc' 
                         ? valA.localeCompare(valB, 'th') 
                         : valB.localeCompare(valA, 'th');
                 }
                 
-                // Number compare
                 return state.sortDirection === 'asc' ? valA - valB : valB - valA;
             });
         }
 
-        // Apply Pagination
         const totalItems = state.filteredItems.length;
         const totalPages = Math.ceil(totalItems / state.pageSize) || 1;
         
-        // Boundaries checks
         if (state.currentPage > totalPages) state.currentPage = totalPages;
         if (state.currentPage < 1) state.currentPage = 1;
 
@@ -471,7 +422,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const endIndex = Math.min(startIndex + state.pageSize, totalItems);
         const paginatedItems = state.filteredItems.slice(startIndex, endIndex);
 
-        // Render Table Rows
         if (paginatedItems.length === 0) {
             tbody.innerHTML = `
                 <tr>
@@ -491,7 +441,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 const hasChildren = item.filteredChildren && item.filteredChildren.length > 0;
 
-                // Render Parent Row
                 row.innerHTML = `
                     <td class="text-center" style="font-weight:700; color:var(--text-secondary);">${item.priority || "-"}</td>
                     <td class="text-center"><span class="badge ${badgeClass}">${badgeLabel}</span></td>
@@ -511,12 +460,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${item.specMaker || "-"}</td>
                 `;
 
-                // If it has children, set up the expand/collapse click behavior on the toggle arrow
                 if (hasChildren) {
                     const toggleTrigger = row.querySelector(".toggle-trigger");
                     if (toggleTrigger) {
                         toggleTrigger.addEventListener("click", (e) => {
-                            e.stopPropagation(); // Prevent row click from opening the modal details!
+                            e.stopPropagation();
                             
                             const childRows = tbody.querySelectorAll(`.child-of-${item.id}`);
                             const toggleIcon = row.querySelector(".toggle-icon");
@@ -534,11 +482,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
 
-                // Parent row itself opens the modal details when clicked
                 row.addEventListener("click", () => showDetailModal(item.id));
                 tbody.appendChild(row);
 
-                // Render Child Rows
                 if (hasChildren) {
                     item.filteredChildren.forEach((child, childIdx) => {
                         const childRow = document.createElement("tr");
@@ -561,7 +507,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             <td style="opacity: 0.9;">${child.specMaker || "-"}</td>
                         `;
                         
-                        // Child row click opens its specific detail modal
                         childRow.addEventListener("click", () => showDetailModal(child.id));
                         tbody.appendChild(childRow);
                     });
@@ -569,7 +514,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Update Pagination Controls
         if (elements.paginationInfo) {
             elements.paginationInfo.textContent = totalItems > 0 
                 ? `กำลังแสดงรายการที่ ${startIndex + 1}-${endIndex} จากทั้งหมด ${formatNumber(totalItems)} รายการหลัก`
@@ -579,10 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (elements.btnPrev) elements.btnPrev.disabled = state.currentPage === 1;
         if (elements.btnNext) elements.btnNext.disabled = state.currentPage === totalPages || totalItems === 0;
 
-        // Sync Sort headers direction
         updateSortHeaders();
-
-        // Refresh charts dynamically based on filtered data!
         renderCharts();
     }
 
@@ -609,11 +550,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 10. Item Details Modal Handler (Handles both parent and child items seamlessly)
     function showDetailModal(itemId) {
         let item = state.items.find(i => i.id === itemId);
         
-        // Search in child arrays if not found in parents
         if (!item) {
             for (const parent of state.items) {
                 const child = parent.children.find(c => c.id === itemId);
@@ -626,7 +565,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (!item) return;
 
-        // Set text fields
         if (elements.modalItemName) elements.modalItemName.textContent = item.name;
         if (elements.modalFaculty) elements.modalFaculty.textContent = item.faculty || "-";
         if (elements.modalDepartment) elements.modalDepartment.textContent = item.department || "-";
@@ -639,14 +577,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (elements.modalExistingStatus) elements.modalExistingStatus.textContent = `${item.existingStatus || "-"} ${item.existingQty ? `(${item.existingQty})` : ""}`;
         if (elements.modalNeedDetail) elements.modalNeedDetail.textContent = item.needDetail || "ไม่ได้ระบุคำอธิบายเพิ่มเติม";
 
-        // Badges
         const isTech = item.type === 'science_tech';
         if (elements.modalBadgeType) {
             elements.modalBadgeType.className = isTech ? 'badge badge-tech' : 'badge badge-health';
             elements.modalBadgeType.textContent = isTech ? 'วิทยาศาสตร์และเทคโนโลยี' : 'วิทยาศาสตร์สุขภาพ';
         }
 
-        // Render Quotes comparison
         const quotes = [];
         if (item.vendor1) quotes.push({ name: item.vendor1, price: item.price1 });
         if (item.vendor2) quotes.push({ name: item.vendor2, price: item.price2 });
@@ -657,7 +593,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (quotes.length === 0) {
                 elements.modalQuotesGrid.innerHTML = `<div style="grid-column: 1/-1; color:var(--text-secondary); text-align:center; padding: 10px;">ไม่มีข้อมูลใบเสนอราคาเปรียบเทียบ</div>`;
             } else {
-                // Find lowest price
                 const validPrices = quotes.filter(q => q.price > 0);
                 const lowestPrice = validPrices.length > 0 ? Math.min(...validPrices.map(q => q.price)) : Infinity;
 
@@ -678,7 +613,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Smart PDF/Spec link checking
         if (elements.modalBtnPdf) {
             let currentLink = item.pdfLink;
             if (!currentLink && item.children && item.children.length > 0) {
@@ -697,7 +631,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Open Modal
         if (elements.modalDetail) {
             elements.modalDetail.classList.add("active");
         }
@@ -709,21 +642,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // =========================================================================
-    // GOOGLE SHEETS LIVE DATA PARSING & LOADER ENGINE
-    // =========================================================================
     async function fetchSheetData(spreadsheetId, sheetName) {
-        // Append unique timestamp to bypass browser cache
         const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=&sheet=${encodeURIComponent(sheetName)}&t=${Date.now()}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const text = await res.text();
         
-        // Parse Viz API output callback string securely
         const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
         const data = JSON.parse(jsonString);
         
-        // Log raw data in developer console
         console.log(`[Google Sheets Raw Data] Sheet Tab Name: "${sheetName}"`, data);
         
         return data.table;
@@ -740,7 +667,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return isNaN(val) ? 0 : val;
     }
 
-    // Parse budget and clean commas before converting to float
     function parsePrice(cell) {
         if (!cell) return 0;
         const str = cell.f || String(cell.v !== null && cell.v !== undefined ? cell.v : "");
@@ -754,7 +680,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentParent = null;
         const rows = table.rows || [];
         
-        // DYNAMIC START INDEX DETECTION (ค้นหาแถวเริ่มต้นของข้อมูลดิบรายการครุภัณฑ์)
         let startIndex = 0;
         for (let i = 0; i < rows.length; i++) {
             const r = rows[i];
@@ -773,7 +698,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Log column mappings for developer console auditing
         console.log(`[Google Sheets Mapping Info] Tab: "${isTech ? 'Tech' : 'Health'}" indices used:`, {
             priority: 0,
             agencyNo: 1,
@@ -788,8 +712,7 @@ document.addEventListener("DOMContentLoaded", () => {
             department: 21,
             image: 22,
             faculty: 23,
-            link: 24,
-            pdfLink: 25
+            pdfLink: 24
         });
 
         for (let r = startIndex; r < rows.length; r++) {
@@ -797,14 +720,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!row || !row.c) continue;
 
             const cells = row.c;
-            const priority = cleanText(cells[0]); // Priority is Column A (index 0)
-            const name = cleanText(cells[3]);     // Name is Column D (index 3)
-            const qty = cleanNumber(cells[5]);     // Qty is Column F (index 5)
+            const priority = cleanText(cells[0]);
+            const name = cleanText(cells[3]);
+            const qty = cleanNumber(cells[5]);
 
-            // Skip rows without valid name or quantity
             if (!name || qty <= 0) continue;
 
-            // G1: ดึงเฉพาะข้อมูลรายการครุภัณฑ์ (กรองเอาเฉพาะแถวที่เป็นครุภัณฑ์จริง ข้ามแถวตารางสรุป/ guidelines ทั้งหมด)
             const lowerName = name.toLowerCase();
             if (lowerName.includes("รวมทั้งหมด") || 
                 lowerName.includes("หมายเหตุ") || 
@@ -818,12 +739,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 continue;
             }
 
-            // Fixed columns mappings
             const agencyNo = cleanText(cells[1]);
             const category = cleanText(cells[2]);
             const unit = cleanText(cells[4]);
             
-            // G2: บวกเลขยอดรวมใหม่ด้วยโค้ด (ลบเครื่องหมาย Comma (,) ก่อนนำมาบวกเสมอ)
             const unitPrice = parsePrice(cells[6]);
             const totalPrice = parsePrice(cells[7]) || (qty * unitPrice);
 
@@ -840,15 +759,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const price3 = parsePrice(cells[18]);
             const requester = cleanText(cells[19]);
 
-            // Trailing columns (indices 20 to 25) are identical in both sheets
             const specMaker = cleanText(cells[20]);
             const department = cleanText(cells[21]);
             const image = cleanText(cells[22]);
             const faculty = cleanText(cells[23]);
-            const link = cleanText(cells[24]);
-            const pdfLink = cleanText(cells[25]);
+            const pdfLink = cleanText(cells[24]);
 
-            // Parent Item: Priority (Col A) is a valid numeric value
             const isParent = priority !== "" && !isNaN(parseFloat(priority)) && isFinite(priority);
 
             if (isParent) {
@@ -880,12 +796,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     department: department,
                     image: image,
                     faculty: faculty,
-                    link: link,
                     pdfLink: pdfLink,
                     children: []
                 };
 
-                // Output logs for visual verification of mapped cells
                 if (items.length < 2) {
                     console.log(`[Google Sheets Parse] Mapped Row ${r+1} -> Parent Name: "${parentObj.name}", Qty: ${parentObj.quantity}, Price: ${parentObj.totalPrice} Baht`);
                 }
@@ -893,7 +807,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentParent = parentObj;
                 items.push(parentObj);
             } else {
-                // Child Item
                 if (currentParent) {
                     let childUnitPrice = unitPrice;
                     if (childUnitPrice === 0) {
@@ -931,11 +844,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         department: department,
                         image: image,
                         faculty: faculty,
-                        link: link,
                         pdfLink: pdfLink
                     };
                     
-                    // Output logs for visual verification of mapped child cells
                     if (currentParent.children.length < 2) {
                         console.log(`[Google Sheets Parse] Mapped Row ${r+1} -> Child Name: "${childObj.name}", Qty: ${childObj.quantity}, Price: ${childObj.totalPrice} Baht`);
                     }
@@ -955,7 +866,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(`[Google Sheets] Starting load... SHEET_ID: ${GOOGLE_SHEETS_CONFIG.spreadsheetId}`);
                 console.log(`[Google Sheets] Target tabs: "${GOOGLE_SHEETS_CONFIG.techSheetName}" and "${GOOGLE_SHEETS_CONFIG.healthSheetName}"`);
                 
-                // Add minor indicator in phase alert box
                 if (elements.phaseAlertBox) {
                     elements.phaseAlertBox.innerHTML += `<div id="gs-loading-status" style="font-size:0.8rem; font-weight:600; color:var(--primary); margin-top:6px; animation: blink 1.2s infinite alternate;">🔄 กำลังเชื่อมต่อระบบและดึงข้อมูลสดจาก Google Sheets...</div>`;
                 }
@@ -966,17 +876,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const healthTable = await fetchSheetData(GOOGLE_SHEETS_CONFIG.spreadsheetId, GOOGLE_SHEETS_CONFIG.healthSheetName);
                 console.log(`[Google Sheets] Health Sheet loaded. Total rows: ${healthTable.rows ? healthTable.rows.length : 0}`);
 
-                // Parse items for table view
                 const techItems = parseSheetTable(techTable, true);
                 const healthItems = parseSheetTable(healthTable, false);
 
                 state.items = [...techItems, ...healthItems];
                 console.log(`[Google Sheets] Total combined items parsed: ${state.items.length}`);
                 
-                // Clear loading status by rebuilding timeline
                 initTimeline();
                 
-                // Append success logs to the UI for user visibility
                 if (elements.phaseAlertBox) {
                     elements.phaseAlertBox.innerHTML += `<div style="font-size:0.8rem; font-weight:600; color:#2ec4b6; margin-top:4px;">✅ ดึงข้อมูลสดจาก Google Sheets สำเร็จ! (วิทย์-เทค: ${techItems.length} รายการ, วิทย์-สุข: ${healthItems.length} รายการ)</div>`;
                 }
@@ -992,11 +899,10 @@ document.addEventListener("DOMContentLoaded", () => {
             loadLocalFallback();
         }
 
-        // Initialize state arrays, metrics, filter options and render elements
         state.filteredItems = [...state.items];
         updateKPIs();
         initFilterOptions();
-        renderTable(); // Renders the table, which triggers chart updates
+        renderTable();
     }
 
     function loadLocalFallback() {
@@ -1008,8 +914,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
     }
 
-    // 11. Event Listeners wire-up
-    // Theme toggle
     if (elements.themeToggle) {
         elements.themeToggle.addEventListener("click", () => {
             if (elements.body) {
@@ -1018,12 +922,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const thumb = elements.themeToggle.querySelector(".theme-switch-thumb");
                 if (thumb) thumb.textContent = isDark ? "🌙" : "☀️";
             }
-            // Re-render table (which also re-renders charts with updated colors)
             renderTable();
         });
     }
 
-    // Modal Close
     if (elements.modalCloseBtn) {
         elements.modalCloseBtn.addEventListener("click", closeModal);
     }
@@ -1033,7 +935,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Pagination
     if (elements.btnPrev) {
         elements.btnPrev.addEventListener("click", () => {
             if (state.currentPage > 1) {
@@ -1053,7 +954,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Table sorting
     if (elements.thPriority) elements.thPriority.addEventListener("click", () => handleSort('priority'));
     if (elements.thType) elements.thType.addEventListener("click", () => handleSort('type'));
     if (elements.thName) elements.thName.addEventListener("click", () => handleSort('name'));
@@ -1066,7 +966,6 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.thSpecMaker.addEventListener("click", () => handleSort('specMaker'));
     }
 
-    // Filter changes
     if (elements.searchInput) {
         elements.searchInput.addEventListener("input", (e) => {
             state.filters.search = e.target.value;
@@ -1091,7 +990,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Clear filters (restores default list-load order)
     if (elements.btnClearFilters) {
         elements.btnClearFilters.addEventListener("click", () => {
             if (elements.searchInput) elements.searchInput.value = '';
@@ -1102,14 +1000,13 @@ document.addEventListener("DOMContentLoaded", () => {
             state.filters.type = '';
             state.filters.faculty = '';
             
-            state.sortColumn = null; // Return to original sheet order
+            state.sortColumn = null;
             state.currentPage = 1;
             renderTable();
         });
     }
 
-    // 12. Run Initialization
     initDateHeader();
     initTimeline();
-    loadDataset(); // Dynamically pulls from Google Sheets or falls back to local data.js
+    loadDataset();
 });
