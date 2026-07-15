@@ -97,7 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
         modalNeedDetail: document.getElementById("modal-need-detail"),
         modalQuotesGrid: document.getElementById("modal-quotes-grid"),
         modalBtnQuote: document.getElementById("modal-btn-quote"),
-        modalBtnImage: document.getElementById("modal-btn-image")
+        modalBtnImage: document.getElementById("modal-btn-image"),
+        modalBtnPdf: document.getElementById("modal-btn-pdf")
     };
 
     // Today's actual date (Dynamic)
@@ -698,6 +699,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        if (elements.modalBtnPdf) {
+            if (item.pdfLink) {
+                elements.modalBtnPdf.href = item.pdfLink;
+                elements.modalBtnPdf.style.display = 'flex';
+            } else {
+                elements.modalBtnPdf.style.display = 'none';
+            }
+        }
+
         // Open Modal
         if (elements.modalDetail) {
             elements.modalDetail.classList.add("active");
@@ -789,7 +799,8 @@ document.addEventListener("DOMContentLoaded", () => {
             department: 21,
             image: 22,
             faculty: 23,
-            link: 24
+            link: 24,
+            pdfLink: 25
         });
 
         for (let r = startIndex; r < rows.length; r++) {
@@ -840,12 +851,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const price3 = parsePrice(cells[18]);
             const requester = cleanText(cells[19]);
 
-            // Trailing columns (indices 20 to 24) are identical in both sheets
+            // Trailing columns (indices 20 to 25) are identical in both sheets
             const specMaker = cleanText(cells[20]);
             const department = cleanText(cells[21]);
             const image = cleanText(cells[22]);
             const faculty = cleanText(cells[23]);
             const link = cleanText(cells[24]);
+            const pdfLink = cleanText(cells[25]);
 
             // Parent Item: Priority (Col A) is a valid numeric value
             const isParent = priority !== "" && !isNaN(parseFloat(priority)) && isFinite(priority);
@@ -880,6 +892,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     image: image,
                     faculty: faculty,
                     link: link,
+                    pdfLink: pdfLink,
                     children: []
                 };
 
@@ -929,7 +942,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         department: department,
                         image: image,
                         faculty: faculty,
-                        link: link
+                        link: link,
+                        pdfLink: pdfLink
                     };
                     
                     // Output logs for visual verification of mapped child cells
