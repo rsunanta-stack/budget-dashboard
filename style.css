@@ -1411,3 +1411,38 @@ body.dark-theme .app-footer {
         margin-top: 30px;
     }
 }
+
+/* Forms Accordion & Folder List */
+.forms-section { margin-top: 30px; }
+.accordion-container { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+.accordion-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
+.accordion-header {
+    width: 100%; text-align: left; padding: 18px 24px; background: rgba(255, 255, 255, 0.02);
+    color: var(--text-primary); font-size: 1.1rem; font-weight: 600; border: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;
+}
+.accordion-header:hover { background: rgba(255, 255, 255, 0.06); }
+.accordion-header.active { background: var(--primary); color: white; }
+.accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+.accordion-content.active { max-height: 2500px; padding: 25px; background: rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255,255,255,0.05); }
+
+/* Folder Action Button */
+.folder-action-bar { margin-bottom: 25px; text-align: center; }
+.btn-open-folder {
+    display: inline-flex; align-items: center; gap: 8px; background: #2ec4b6; color: #13111d;
+    padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 1.05rem; font-weight: 700;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(46, 196, 182, 0.2);
+}
+.btn-open-folder:hover { background: #25a396; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(46, 196, 182, 0.35); color: #13111d; }
+
+/* Simple List for Descriptions */
+.list-title { color: var(--text-primary); margin-bottom: 12px; font-size: 1.05rem; }
+.file-list-simple { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.file-list-simple li { display: flex; gap: 12px; background: rgba(255, 255, 255, 0.02); padding: 12px 16px; border-radius: 6px; border-left: 4px solid var(--primary); transition: background 0.2s; }
+.file-list-simple li:hover { background: rgba(255, 255, 255, 0.05); }
+.file-list-simple li strong { color: var(--text-primary); min-width: 320px; font-size: 0.95rem; }
+.file-list-simple li span { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+@media (max-width: 768px) {
+    .file-list-simple li { flex-direction: column; gap: 4px; }
+    .file-list-simple li strong { min-width: auto; }
+}
