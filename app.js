@@ -1010,3 +1010,20 @@ document.addEventListener("DOMContentLoaded", () => {
     initTimeline();
     loadDataset();
 });
+
+// Function for Forms Accordion
+function toggleAccordion(btn) {
+    const content = btn.nextElementSibling;
+    const arrow = btn.querySelector('.icon-arrow');
+    
+    // Toggle active classes
+    btn.classList.toggle('active');
+    content.classList.toggle('active');
+    
+    // Change arrow direction
+    if (content.classList.contains('active')) {
+        arrow.textContent = '▲';
+    } else {
+        arrow.textContent = '▼';
+    }
+}
