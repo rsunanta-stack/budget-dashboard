@@ -1412,8 +1412,36 @@ body.dark-theme .app-footer {
     }
 }
 
+/* Fix Header Navigation Wrapping */
+.nav-link {
+    white-space: nowrap; /* ป้องกันข้อความตกบรรทัด */
+}
+@media (min-width: 992px) {
+    .header-nav { gap: 15px; } /* ปรับระยะห่างเมนูให้พอดีขึ้น */
+    .nav-link { padding: 8px 12px; }
+}
+
+/* Modal Popup Styles */
+#formsModal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 2000;
+    justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
+}
+#formsModal.show { display: flex; opacity: 1; }
+#formsModal .modal-content {
+    background: rgba(30, 30, 40, 0.95); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto;
+    padding: 30px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: translateY(-20px); transition: transform 0.3s;
+}
+#formsModal.show .modal-content { transform: translateY(0); }
+#formsModal .modal-close {
+    position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: var(--text-secondary);
+    cursor: pointer; transition: color 0.2s; background: none; border: none;
+}
+#formsModal .modal-close:hover { color: #ff4757; }
+
 /* Forms Accordion & Folder List */
-.forms-section { margin-top: 30px; }
 .accordion-container { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
 .accordion-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; }
 .accordion-header {
@@ -1446,3 +1474,4 @@ body.dark-theme .app-footer {
     .file-list-simple li { flex-direction: column; gap: 4px; }
     .file-list-simple li strong { min-width: auto; }
 }
+
