@@ -26,7 +26,7 @@
             <a href="#" class="nav-link">หน้าหลัก</a>
             <a href="#timeline-section" class="nav-link">แผนการจัดซื้อจัดจ้าง</a>
             <a href="#data-section" class="nav-link">ข้อมูลรายการครุภัณฑ์</a>
-            <a href="#forms-section" class="nav-link">แบบฟอร์มการจัดซื้อ</a>
+            <a href="#" onclick="openFormsModal(event)" class="nav-link">แบบฟอร์มการจัดซื้อ</a>
         </nav>
 
         <div class="header-actions">
@@ -216,84 +216,6 @@
 
         </section>
 
-        <!-- Forms Section (Accordion Style with Folder Links) -->
-        <section class="forms-section glass-panel" id="forms-section">
-            <div class="section-header">
-                <h2><span>📁</span> แบบฟอร์มการจัดซื้อ</h2>
-                <p style="color: var(--text-secondary); margin-top: 5px; font-size: 0.9rem;">คลิกเลือกวิธีจัดซื้อ เพื่อดูคำอธิบายและเข้าสู่โฟลเดอร์ดาวน์โหลดเอกสาร</p>
-            </div>
-
-            <div class="accordion-container">
-                <!-- Method 1 -->
-                <div class="accordion-item">
-                    <button class="accordion-header" onclick="toggleAccordion(this)">
-                        1. วิธีเฉพาะเจาะจง ไม่เกิน 100,000 บาท <span class="icon-arrow">▼</span>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="folder-action-bar">
-                            <a href="https://drive.google.com/drive/folders/1KpZQ4teOsDodgC89ECKKfT3lGmDARuH0?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
-                        </div>
-                        <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
-                        <ul class="file-list-simple">
-                            <li><strong>1. แบบควบคุมความถูกต้องวิธีเฉพาะเจาะจง</strong> <span>แบบเช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
-                            <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
-                            <li><strong>3. แบบร่างขอบเขตของงาน (TOR)</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>4. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>5. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
-                            <li><strong>6. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ใช้ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
-                            <li><strong>7. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Method 2 -->
-                <div class="accordion-item">
-                    <button class="accordion-header" onclick="toggleAccordion(this)">
-                        2. วิธีเฉพาะเจาะจง เกิน 100,000 – ไม่เกิน 500,000 บาท <span class="icon-arrow">▼</span>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="folder-action-bar">
-                            <a href="https://drive.google.com/drive/folders/1YCRUBMcLCUyzKEi2LAFxsQBprmkggR_T?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
-                        </div>
-                        <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
-                        <ul class="file-list-simple">
-                            <li><strong>1. แบบควบคุมความถูกต้องวิธีเฉพาะเจาะจง (เกิน100,000–500,000)</strong> <span>เช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
-                            <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
-                            <li><strong>3. แบบเอกสารข้อมูลส่วนบุคคล</strong> <span>แบบแจ้ง/ยินยอมข้อมูลส่วนบุคคลของผู้เกี่ยวข้องในการจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>4. แบบร่างขอบเขตของงาน (TOR)</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>5. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>6. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
-                            <li><strong>7. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
-                            <li><strong>8. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Method 3 -->
-                <div class="accordion-item">
-                    <button class="accordion-header" onclick="toggleAccordion(this)">
-                        3. วิธี e-bidding เกิน 500,000 บาท <span class="icon-arrow">▼</span>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="folder-action-bar">
-                            <a href="https://drive.google.com/drive/folders/1JvsUGn7WTc8yzi1xcD_Nq4Hrm_p8ZaMg?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
-                        </div>
-                        <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
-                        <ul class="file-list-simple">
-                            <li><strong>1. แบบควบคุมความถูกต้องวิธี e-bidding</strong> <span>เช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
-                            <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
-                            <li><strong>3. แบบเอกสารข้อมูลส่วนบุคคล</strong> <span>แบบแจ้ง/ยินยอมข้อมูลส่วนบุคคลของผู้เกี่ยวข้องในการจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>4. แบบร่างขอบเขตของงานวิธี e-bidding</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>5. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
-                            <li><strong>6. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
-                            <li><strong>7. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
-                            <li><strong>8. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
-                            <li><strong>📁 ตัวอย่างรายงานการประชุม</strong> <span>เอกสารบันทึกการประชุมและรายงานการประชุมคณะกรรมการ e-bidding</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
 
     </div>
 
@@ -376,6 +298,88 @@
                 </a>
             </div>
 
+        </div>
+    </div>
+
+    <!-- Forms Modal (Popup) -->
+    <div id="formsModal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <span class="modal-close" onclick="closeFormsModal()">✖</span>
+            <div class="section-header">
+                <h2><span>📁</span> แบบฟอร์มการจัดซื้อ</h2>
+                <p style="color: var(--text-secondary); margin-top: 5px; font-size: 0.9rem;">คลิกเลือกวิธีจัดซื้อ เพื่อดูคำอธิบายและเข้าสู่โฟลเดอร์ดาวน์โหลดเอกสาร</p>
+            </div>
+
+            <div class="accordion-container">
+                <!-- Method 1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        1. วิธีเฉพาะเจาะจง ไม่เกิน 100,000 บาท <span class="icon-arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="folder-action-bar">
+                            <a href="https://drive.google.com/drive/folders/1KpZQ4teOsDodgC89ECKKfT3lGmDARuH0?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
+                        </div>
+                        <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
+                        <ul class="file-list-simple">
+                            <li><strong>1. แบบควบคุมความถูกต้องวิธีเฉพาะเจาะจง</strong> <span>แบบเช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
+                            <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
+                            <li><strong>3. แบบร่างขอบเขตของงาน (TOR)</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>4. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>5. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
+                            <li><strong>6. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ใช้ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
+                            <li><strong>7. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Method 2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        2. วิธีเฉพาะเจาะจง เกิน 100,000 – ไม่เกิน 500,000 บาท <span class="icon-arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="folder-action-bar">
+                            <a href="https://drive.google.com/drive/folders/1YCRUBMcLCUyzKEi2LAFxsQBprmkggR_T?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
+                        </div>
+                        <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
+                        <ul class="file-list-simple">
+                            <li><strong>1. แบบควบคุมความถูกต้องวิธีเฉพาะเจาะจง (เกิน100,000–500,000)</strong> <span>เช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
+                            <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
+                            <li><strong>3. แบบเอกสารข้อมูลส่วนบุคคล</strong> <span>แบบแจ้ง/ยินยอมข้อมูลส่วนบุคคลของผู้เกี่ยวข้องในการจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>4. แบบร่างขอบเขตของงาน (TOR)</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>5. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>6. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
+                            <li><strong>7. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
+                            <li><strong>8. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Method 3 -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        3. วิธี e-bidding เกิน 500,000 บาท <span class="icon-arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="folder-action-bar">
+                            <a href="https://drive.google.com/drive/folders/1JvsUGn7WTc8yzi1xcD_Nq4Hrm_p8ZaMg?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
+                        </div>
+                        <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
+                        <ul class="file-list-simple">
+                            <li><strong>1. แบบควบคุมความถูกต้องวิธี e-bidding</strong> <span>เช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
+                            <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
+                            <li><strong>3. แบบเอกสารข้อมูลส่วนบุคคล</strong> <span>แบบแจ้ง/ยินยอมข้อมูลส่วนบุคคลของผู้เกี่ยวข้องในการจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>4. แบบร่างขอบเขตของงานวิธี e-bidding</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>5. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
+                            <li><strong>6. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
+                            <li><strong>7. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
+                            <li><strong>8. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
+                            <li><strong>📁 ตัวอย่างรายงานการประชุม</strong> <span>เอกสารบันทึกการประชุมและรายงานการประชุมคณะกรรมการ e-bidding</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
