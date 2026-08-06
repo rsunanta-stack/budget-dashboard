@@ -1011,16 +1011,28 @@ document.addEventListener("DOMContentLoaded", () => {
     loadDataset();
 });
 
+// Function for Forms Modal
+function openFormsModal(e) {
+    if(e) e.preventDefault();
+    document.getElementById('formsModal').classList.add('show');
+}
+function closeFormsModal() {
+    document.getElementById('formsModal').classList.remove('show');
+}
+// ปิดหน้าต่างเมื่อคลิกพื้นที่ว่างด้านนอก
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('formsModal');
+    if (e.target === modal) {
+        closeFormsModal();
+    }
+});
+
 // Function for Forms Accordion
 function toggleAccordion(btn) {
     const content = btn.nextElementSibling;
     const arrow = btn.querySelector('.icon-arrow');
-    
-    // Toggle active classes
     btn.classList.toggle('active');
     content.classList.toggle('active');
-    
-    // Change arrow direction
     if (content.classList.contains('active')) {
         arrow.textContent = '▲';
     } else {
