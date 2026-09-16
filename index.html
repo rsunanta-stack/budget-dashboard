@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,323 +8,462 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
-<body class="dark-theme"> <!-- Default dark-theme for premium aesthetics -->
+<body data-theme="dark" class="dark-theme">
 
-    <!-- Header Section -->
-    <header class="glass-panel">
-        <div class="logo-container">
-            <span class="hamburger-menu" style="font-size: 1.8rem; font-weight: bold; cursor: pointer; color: var(--text-primary); margin-right: 12px; line-height: 1;">≡</span>
-            <img src="logo.png" alt="CSE Walailak University Logo" onerror="this.style.display='none'">
-            <div class="header-title">
-                <h1>ระบบติดตามงบประมาณ</h1>
-                <p>ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยวลัยลักษณ์</p>
-            </div>
-        </div>
-
-        <!-- Navigation Links -->
-        <nav class="header-nav">
-            <a href="#" class="nav-link">หน้าหลัก</a>
-            <a href="#timeline-section" class="nav-link">แผนการจัดซื้อจัดจ้าง</a>
-            <a href="#tracking-section" class="nav-link">ติดตามสถานะเอกสาร</a>
-            <a href="#data-section" class="nav-link">ข้อมูลรายการครุภัณฑ์</a>
-            <a href="forms.html" target="_blank" class="nav-link">แบบฟอร์มการจัดซื้อ</a>
-        </nav>
-
-        <div class="header-actions">
-            <div class="date-badge" id="current-date-badge">
-                <span class="date-icon">📅</span>
-                <span id="date-string">1 กรกฎาคม 2569</span>
-            </div>
-            <!-- Theme Toggle Switch -->
-            <div class="theme-switch" id="theme-toggle" title="สลับโหมด มืด/สว่าง">
-                <div class="theme-switch-thumb">🌙</div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <div class="container">
+    <div class="app-layout">
         
-        <!-- Timeline Section -->
-        <section class="timeline-section glass-panel" id="timeline-section">
-            <div class="section-header">
-                <h2>
-                    <span>⏰</span> แผนการจัดซื้อจัดจ้าง งบลงทุนประจำปีงบประมาณ พ.ศ. 2570
-                </h2>
-                <!-- Stepper Banner (Replaces orange banner) -->
-                <div class="stepper-banner" id="stepper-banner">
-                    <!-- Step 6 -->
-                    <div class="stepper-step step-6">
-                        <div class="step-badge">6</div>
-                        <div class="step-info">
-                            <span class="step-date">ก.ค. 69</span>
-                            <span class="step-title">พิจารณาร่าง พ.ร.บ. งบประมาณ</span>
-                        </div>
-                    </div>
-                    <!-- Step 7 -->
-                    <div class="stepper-step step-7">
-                        <div class="step-badge">7</div>
-                        <div class="step-info">
-                            <span class="step-date">ก.ค. 69</span>
-                            <span class="step-title">ชี้แจงงบประมาณ</span>
-                        </div>
-                    </div>
-                    <!-- Step 8 -->
-                    <div class="stepper-step step-8">
-                        <div class="step-badge">8</div>
-                        <div class="step-info">
-                            <span class="step-date">ก.ค. - ส.ค. 69</span>
-                            <span class="step-title">จัดทำเอกสารและ Spec</span>
-                        </div>
-                    </div>
-                    <!-- Step 9 -->
-                    <div class="stepper-step step-9">
-                        <div class="step-badge">9</div>
-                        <div class="step-info">
-                            <span class="step-date">1 ส.ค. 69</span>
-                            <span class="step-title">เริ่มออก PR แบบ manual</span>
-                        </div>
-                    </div>
-                    <!-- Step 10 -->
-                    <div class="stepper-step step-10">
-                        <div class="step-badge">10</div>
-                        <div class="step-info">
-                            <span class="step-date">31 ส.ค. 69</span>
-                            <span class="step-title">วันสุดท้ายการส่ง Spec</span>
-                        </div>
-                    </div>
+        <!-- Sidebar ด้านซ้าย -->
+        <aside class="app-sidebar" id="app-sidebar">
+            <div class="sidebar-brand">
+                <img src="logo.png" alt="CSE Walailak University Logo" class="brand-logo" onerror="this.style.display='none'">
+                <div class="brand-text">
+                    <h1 class="brand-title">ระบบติดตามงบ</h1>
+                    <p class="brand-subtitle">ศคว. มหาวิทยาลัยวลัยลักษณ์</p>
                 </div>
             </div>
-            <!-- Visual Timeline Slider -->
-            <div class="timeline-tracker" id="timeline-container">
-                <!-- Will be dynamically populated by app.js -->
-            </div>
-        </section>
 
-        <!-- Metrics Overview Section -->
-        <section class="metrics-grid">
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">เมนูหลัก</div>
+                <a href="#metrics-overview" class="sidebar-link active" data-tab="dashboard" data-target="metrics-overview">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">ภาพรวมงบประมาณ</span>
+                </a>
+                <a href="#timeline-section" class="sidebar-link" data-tab="dashboard" data-target="timeline-section">
+                    <span class="nav-icon">⏰</span>
+                    <span class="nav-text">แผนการจัดซื้อจัดจ้าง</span>
+                </a>
+                <a href="#tracking-section" class="sidebar-link" data-tab="dashboard" data-target="tracking-section">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">ติดตามสถานะเอกสาร</span>
+                </a>
+                <a href="#data-section" class="sidebar-link" data-tab="dashboard" data-target="data-section">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">ข้อมูลรายการครุภัณฑ์</span>
+                </a>
+
+                <div class="nav-section-label" style="margin-top: 24px;">แบบฟอร์ม & เอกสาร</div>
+                <a href="#forms-section" class="sidebar-link" data-tab="forms" data-target="forms-section" id="nav-forms">
+                    <span class="nav-icon">📁</span>
+                    <span class="nav-text">แบบฟอร์มการจัดซื้อ</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status-indicator">
+                    <span class="status-dot"></span>
+                    <span>งบลงทุน พ.ศ. 2570</span>
+                </div>
+                <small class="version-text">Modern Admin Dashboard</small>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Main Wrapper (Top Navbar + Content + Footer) -->
+        <div class="app-wrapper">
             
-            <div class="metric-card glass-panel card-tech">
-                <div class="metric-header">
-                    <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
-                    <div class="metric-icon">🔬</div>
-                </div>
-                <div class="metric-value" id="val-tech-budget">0.00 ฿</div>
-                <div class="metric-subtext" id="val-tech-count">0 รายการ</div>
-            </div>
-
-            <div class="metric-card glass-panel card-health">
-                <div class="metric-header">
-                    <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
-                    <div class="metric-icon">🏥</div>
-                </div>
-                <div class="metric-value" id="val-health-budget">0.00 ฿</div>
-                <div class="metric-subtext" id="val-health-count">0 รายการ</div>
-            </div>
-
-            <div class="metric-card glass-panel card-total">
-                <div class="metric-header">
-                    <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
-                    <div class="metric-icon">💰</div>
-                </div>
-                <div class="metric-value" id="val-total-budget">0.00 ฿</div>
-                <div class="metric-subtext" id="val-total-count">0 รายการ (เฉลี่ย 0 ฿ ต่อชิ้น)</div>
-            </div>
-
-        </section>
-
-        <!-- Charts Grid Section -->
-        <section class="charts-grid">
-            
-            <div class="chart-card glass-panel">
-                <h3 class="chart-title">สัดส่วนงบประมาณแยกตามสาขา (Budget Share)</h3>
-                <div class="chart-wrapper">
-                    <canvas id="chart-share"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card glass-panel">
-                <h3 class="chart-title">งบประมาณรวมสูงสุด 5 อันดับแรกแยกตามหน่วยงาน/สำนักวิชา</h3>
-                <div class="chart-wrapper">
-                    <canvas id="chart-schools"></canvas>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- Tracking Section (กระดานติดตามสถานะการจัดทำเอกสาร) -->
-        <section class="tracking-section glass-panel" id="tracking-section">
-            <div class="section-header">
-                <h2><span>📋</span> กระดานติดตามสถานะการจัดทำเอกสาร</h2>
-            </div>
-
-            <!-- Overview Metrics -->
-            <div class="tracking-metrics-grid">
-                <div class="tracking-metric-card metric-sent">
-                    <div class="tracking-metric-icon">📦</div>
-                    <div class="tracking-metric-info">
-                        <span class="tracking-metric-label">ส่งส่วนพัสดุเรียบร้อย</span>
-                        <div class="tracking-metric-val"><span id="val-tracking-sent">0</span> <small>รายการ</small></div>
+            <!-- Top Navbar ด้านบน -->
+            <header class="app-topbar">
+                <div class="topbar-left">
+                    <button class="btn-sidebar-toggle" id="sidebar-toggle" title="เปิด/ปิด เมนูด้านข้าง">
+                        <span class="toggle-icon-bar">☰</span>
+                    </button>
+                    <div class="topbar-title-wrap">
+                        <h2 class="topbar-page-title" id="topbar-page-title">ระบบงบลงทุนและแผนจัดซื้อจัดจ้าง 2570</h2>
+                        <span class="topbar-breadcrumb" id="topbar-breadcrumb">ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี</span>
                     </div>
                 </div>
 
-                <div class="tracking-metric-card metric-self">
-                    <div class="tracking-metric-icon">🏢</div>
-                    <div class="tracking-metric-info">
-                        <span class="tracking-metric-label">ศคว. ดำเนินการจัดซื้อเอง</span>
-                        <div class="tracking-metric-val"><span id="val-tracking-self">0</span> <small>รายการ</small></div>
+                <div class="topbar-right">
+                    <div class="date-badge" id="current-date-badge">
+                        <span class="date-icon">📅</span>
+                        <span id="date-string">1 กรกฎาคม 2569</span>
                     </div>
-                </div>
 
-                <div class="tracking-metric-card metric-inprogress">
-                    <div class="tracking-metric-icon">⚡</div>
-                    <div class="tracking-metric-info">
-                        <span class="tracking-metric-label">อยู่ระหว่างดำเนินการ</span>
-                        <div class="tracking-metric-val"><span id="val-tracking-inprogress">0</span> <small>รายการ</small></div>
+                    <!-- Theme Toggle Switch (มุมขวาบนสุด) -->
+                    <button class="theme-toggle-btn" id="theme-toggle" title="สลับโหมด สว่าง/มืด">
+                        <span class="theme-icon" id="theme-icon">🌙</span>
+                        <span class="theme-label" id="theme-label">Dark Mode</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="app-main" id="dashboard-top">
+                <div class="content-container">
+
+                    <!-- Dashboard Tab Content -->
+                    <div id="dashboard-section" style="display: flex; flex-direction: column; gap: 28px; width: 100%;">
+
+                    <!-- Timeline Section -->
+                    <section class="admin-card timeline-section" id="timeline-section">
+                        <div class="section-header">
+                            <h2>
+                                <span>⏰</span> แผนการจัดซื้อจัดจ้าง งบลงทุนประจำปีงบประมาณ พ.ศ. 2570
+                            </h2>
+                            <!-- Stepper Banner -->
+                            <div class="stepper-banner" id="stepper-banner">
+                                <div class="stepper-step step-6">
+                                    <div class="step-badge">6</div>
+                                    <div class="step-info">
+                                        <span class="step-date">ก.ค. 69</span>
+                                        <span class="step-title">พิจารณาร่าง พ.ร.บ. งบประมาณ</span>
+                                    </div>
+                                </div>
+                                <div class="stepper-step step-7">
+                                    <div class="step-badge">7</div>
+                                    <div class="step-info">
+                                        <span class="step-date">ก.ค. 69</span>
+                                        <span class="step-title">ชี้แจงงบประมาณ</span>
+                                    </div>
+                                </div>
+                                <div class="stepper-step step-8">
+                                    <div class="step-badge">8</div>
+                                    <div class="step-info">
+                                        <span class="step-date">ก.ค. - ส.ค. 69</span>
+                                        <span class="step-title">จัดทำเอกสารและ Spec</span>
+                                    </div>
+                                </div>
+                                <div class="stepper-step step-9">
+                                    <div class="step-badge">9</div>
+                                    <div class="step-info">
+                                        <span class="step-date">1 ส.ค. 69</span>
+                                        <span class="step-title">เริ่มออก PR แบบ manual</span>
+                                    </div>
+                                </div>
+                                <div class="stepper-step step-10">
+                                    <div class="step-badge">10</div>
+                                    <div class="step-info">
+                                        <span class="step-date">31 ส.ค. 69</span>
+                                        <span class="step-title">วันสุดท้ายการส่ง Spec</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Timeline Slider -->
+                        <div class="timeline-tracker" id="timeline-container">
+                            <!-- Will be dynamically populated by app.js -->
+                        </div>
+                    </section>
+
+                    <!-- Metrics Overview Section (Solid Colors) -->
+                    <section class="metrics-grid" id="metrics-overview">
+                        
+                        <!-- Metric 1: Blue Solid -->
+                        <div class="metric-card card-solid-blue">
+                            <div class="metric-header">
+                                <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
+                                <div class="metric-icon">🔬</div>
+                            </div>
+                            <div class="metric-value" id="val-tech-budget">0.00 ฿</div>
+                            <div class="metric-subtext" id="val-tech-count">0 รายการ</div>
+                        </div>
+
+                        <!-- Metric 2: Cyan Solid -->
+                        <div class="metric-card card-solid-cyan">
+                            <div class="metric-header">
+                                <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
+                                <div class="metric-icon">🏥</div>
+                            </div>
+                            <div class="metric-value" id="val-health-budget">0.00 ฿</div>
+                            <div class="metric-subtext" id="val-health-count">0 รายการ</div>
+                        </div>
+
+                        <!-- Metric 3: Amber/Orange Solid -->
+                        <div class="metric-card card-solid-orange">
+                            <div class="metric-header">
+                                <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
+                                <div class="metric-icon">💰</div>
+                            </div>
+                            <div class="metric-value" id="val-total-budget">0.00 ฿</div>
+                            <div class="metric-subtext" id="val-total-count">0 รายการ (เฉลี่ย 0 ฿ ต่อชิ้น)</div>
+                        </div>
+
+                    </section>
+
+                    <!-- Charts Grid Section -->
+                    <section class="charts-grid">
+                        
+                        <div class="admin-card chart-card">
+                            <h3 class="chart-title">สัดส่วนงบประมาณแยกตามสาขา (Budget Share)</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-share"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="admin-card chart-card">
+                            <h3 class="chart-title">งบประมาณรวมสูงสุด 5 อันดับแรกแยกตามหน่วยงาน/สำนักวิชา</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-schools"></canvas>
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <!-- Tracking Section (กระดานติดตามสถานะการจัดทำเอกสาร) -->
+                    <section class="admin-card tracking-section" id="tracking-section">
+                        <div class="section-header">
+                            <h2><span>📋</span> กระดานติดตามสถานะการจัดทำเอกสาร</h2>
+                        </div>
+
+                        <!-- Overview Metrics -->
+                        <div class="tracking-metrics-grid">
+                            <div class="tracking-metric-card metric-sent">
+                                <div class="tracking-metric-icon">📦</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">ส่งส่วนพัสดุเรียบร้อย</span>
+                                    <div class="tracking-metric-val"><span id="val-tracking-sent">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <div class="tracking-metric-card metric-self">
+                                <div class="tracking-metric-icon">🏢</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">ศคว. ดำเนินการจัดซื้อเอง</span>
+                                    <div class="tracking-metric-val"><span id="val-tracking-self">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <div class="tracking-metric-card metric-inprogress">
+                                <div class="tracking-metric-icon">⚡</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">อยู่ระหว่างดำเนินการ</span>
+                                    <div class="tracking-metric-val"><span id="val-tracking-inprogress">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <div class="tracking-metric-card metric-pending">
+                                <div class="tracking-metric-icon">⏳</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">รอดำเนินการ (ยังไม่เริ่ม)</span>
+                                    <div class="tracking-metric-val"><span id="val-tracking-pending">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar Box -->
+                        <div class="tracking-progress-box">
+                            <div class="progress-header">
+                                <div class="progress-title-wrap">
+                                    <span class="progress-title">📊 ความคืบหน้าการจัดทำเอกสารภาพรวม</span>
+                                    <span class="progress-sub-info" id="tracking-progress-detail">(คำนวณจากรายการที่ไม่ใช่สถานะ 'รอดำเนินการ')</span>
+                                </div>
+                                <span class="progress-percent" id="tracking-progress-percent">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="tracking-progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-footer">
+                                <span id="tracking-progress-subtext">เริ่มดำเนินการแล้ว 0 จากทั้งหมด 0 รายการ (0%)</span>
+                                <span id="tracking-progress-completed-rate">เป้าหมาย: ดำเนินการให้แล้วเสร็จตามแผนงาน</span>
+                            </div>
+                        </div>
+
+                        <!-- Tracking Toolbar -->
+                        <div class="tracking-toolbar">
+                            <div class="tracking-search-wrap">
+                                <span class="tracking-search-icon">🔍</span>
+                                <input type="text" class="tracking-search-input" id="tracking-search-input" placeholder="ค้นหาในกระดานติดตามสถานะ (ชื่อครุภัณฑ์, ผู้รับผิดชอบ Spec, สถานะการทำเอกสาร)...">
+                            </div>
+                            <div class="tracking-filter-chips" id="tracking-filter-chips">
+                                <button class="chip active" data-status-filter="">ทั้งหมด</button>
+                                <button class="chip" data-status-filter="done">ส่งพัสดุ / ศคว. จัดซื้อเอง</button>
+                                <button class="chip" data-status-filter="pr">ออก PR Manual</button>
+                                <button class="chip" data-status-filter="tor">ขออนุมัติ TOR/ราคากลาง</button>
+                                <button class="chip" data-status-filter="spec">ร่าง Spec/สืบราคา</button>
+                                <button class="chip" data-status-filter="committee">แต่งตั้ง กก.</button>
+                                <button class="chip" data-status-filter="pending">รอดำเนินการ</button>
+                            </div>
+                        </div>
+
+                        <!-- Tracking Table -->
+                        <div class="table-wrapper tracking-table-wrapper">
+                            <table class="tracking-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 80px;">ลำดับ</th>
+                                        <th class="text-center" style="width: 140px;">ประเภทงบ</th>
+                                        <th>ชื่อรายการครุภัณฑ์</th>
+                                        <th style="width: 220px;">ผู้รับผิดชอบ Spec</th>
+                                        <th class="text-center" style="width: 240px;">สถานะการทำเอกสาร</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tracking-table-body">
+                                    <!-- Will be dynamically populated by app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </section>
+
+                    <!-- Data Grid & Explorer Section -->
+                    <section class="admin-card data-section" id="data-section">
+                        
+                        <div class="section-header">
+                            <h2><span>🔍</span> รายการครุภัณฑ์ทั้งหมด</h2>
+                        </div>
+
+                        <!-- Filters Bar -->
+                        <div class="filter-bar">
+                            <div class="search-wrapper">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" id="search-input" placeholder="ค้นหาตามชื่อครุภัณฑ์, ผู้ขอ, ผู้รับผิดชอบ Spec หรือสถานที่ตั้ง...">
+                            </div>
+
+                            <select class="filter-select" id="filter-type">
+                                <option value="">กลุ่มงบประมาณทั้งหมด</option>
+                                <option value="science_tech">วิทยาศาสตร์และเทคโนโลยี</option>
+                                <option value="science_health">วิทยาศาสตร์สุขภาพ</option>
+                            </select>
+
+                            <select class="filter-select" id="filter-faculty">
+                                <option value="">หน่วยงาน/สำนักวิชาทั้งหมด</option>
+                                <!-- Will be dynamically populated -->
+                            </select>
+
+                            <button class="btn-clear" id="btn-clear-filters">
+                                <span>🔄</span> ล้างตัวกรอง
+                            </button>
+                        </div>
+
+                        <!-- Budget Table -->
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th id="th-priority" class="text-center" style="width: 80px;">ลำดับ <span class="sort-icon"></span></th>
+                                        <th id="th-type" class="text-center" style="width: 130px;">ประเภทงบ <span class="sort-icon"></span></th>
+                                        <th id="th-name">ชื่อรายการครุภัณฑ์ <span class="sort-icon"></span></th>
+                                        <th id="th-faculty">หน่วยงาน/สำนักวิชา <span class="sort-icon"></span></th>
+                                        <th id="th-qty" class="text-center" style="width: 80px;">จำนวน <span class="sort-icon"></span></th>
+                                        <th id="th-price" class="number-col" style="width: 140px;">ราคาต่อหน่วย <span class="sort-icon"></span></th>
+                                        <th id="th-total" class="number-col" style="width: 150px;">ราคารวม <span class="sort-icon"></span></th>
+                                        <th id="th-requester" style="width: 160px;">ผู้เสนอขอ <span class="sort-icon"></span></th>
+                                        <th id="th-specmaker" style="width: 160px;">ผู้รับผิดชอบ Spec <span class="sort-icon"></span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <!-- Will be dynamically populated by app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Bar -->
+                        <div class="pagination">
+                            <div class="pagination-info" id="pagination-info">
+                                กำลังแสดงรายการที่ 0-0 จากทั้งหมด 0 รายการ
+                            </div>
+                            <div class="pagination-buttons">
+                                <button class="btn-page" id="btn-prev" disabled>ก่อนหน้า</button>
+                                <button class="btn-page" id="btn-next" disabled>ถัดไป</button>
+                            </div>
+                        </div>
+
+                    </section>
                     </div>
+                    <!-- End Dashboard Tab Content -->
+
+                    <!-- Procurement Forms Tab Section (SPA) -->
+                    <section class="admin-card forms-section" id="forms-section" style="display: none;">
+                        <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 24px;">
+                            <h2><span>📁</span> แบบฟอร์มการจัดซื้อ</h2>
+                            <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem;">คลิกเลือกวิธีจัดซื้อ เพื่อดูคำอธิบายและเข้าสู่โฟลเดอร์ดาวน์โหลดเอกสาร (Google Drive)</p>
+                        </div>
+
+                        <div class="accordion-container">
+                            <!-- Method 1 -->
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>1. วิธีเฉพาะเจาะจง ไม่เกิน 100,000 บาท</span>
+                                    <span class="icon-arrow">▼</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="folder-action-bar">
+                                        <a href="https://drive.google.com/drive/folders/1KpZQ4teOsDodgC89ECKKfT3lGmDARuH0?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
+                                    </div>
+                                    <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
+                                    <ul class="file-list-simple">
+                                        <li><strong>1. แบบควบคุมความถูกต้องวิธีเฉพาะเจาะจง</strong> <span>แบบเช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
+                                        <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
+                                        <li><strong>3. แบบร่างขอบเขตของงาน (TOR)</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>4. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>5. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
+                                        <li><strong>6. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ใช้ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
+                                        <li><strong>7. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Method 2 -->
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>2. วิธีเฉพาะเจาะจง เกิน 100,000 – ไม่เกิน 500,000 บาท</span>
+                                    <span class="icon-arrow">▼</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="folder-action-bar">
+                                        <a href="https://drive.google.com/drive/folders/1YCRUBMcLCUyzKEi2LAFxsQBprmkggR_T?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
+                                    </div>
+                                    <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
+                                    <ul class="file-list-simple">
+                                        <li><strong>1. แบบควบคุมความถูกต้องวิธีเฉพาะเจาะจง (เกิน100,000–500,000)</strong> <span>เช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
+                                        <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
+                                        <li><strong>3. แบบเอกสารข้อมูลส่วนบุคคล</strong> <span>แบบแจ้ง/ยินยอมข้อมูลส่วนบุคคลของผู้เกี่ยวข้องในการจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>4. แบบร่างขอบเขตของงาน (TOR)</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>5. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>6. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
+                                        <li><strong>7. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
+                                        <li><strong>8. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Method 3 -->
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>3. วิธี e-bidding เกิน 500,000 บาท</span>
+                                    <span class="icon-arrow">▼</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="folder-action-bar">
+                                        <a href="https://drive.google.com/drive/folders/1JvsUGn7WTc8yzi1xcD_Nq4Hrm_p8ZaMg?usp=sharing" target="_blank" class="btn-open-folder">📂 เปิดโฟลเดอร์รวมเอกสาร (Google Drive)</a>
+                                    </div>
+                                    <h4 class="list-title">รายการเอกสารในโฟลเดอร์นี้:</h4>
+                                    <ul class="file-list-simple">
+                                        <li><strong>1. แบบควบคุมความถูกต้องวิธี e-bidding</strong> <span>เช็คลิสต์ควบคุมความครบถ้วนถูกต้องของเอกสารทั้งชุด</span></li>
+                                        <li><strong>2. เอกสารแนบใบขอซื้อ/จ้าง</strong> <span>เอกสารประกอบที่แนบพร้อมใบขอซื้อขอจ้าง</span></li>
+                                        <li><strong>3. แบบเอกสารข้อมูลส่วนบุคคล</strong> <span>แบบแจ้ง/ยินยอมข้อมูลส่วนบุคคลของผู้เกี่ยวข้องในการจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>4. แบบร่างขอบเขตของงานวิธี e-bidding</strong> <span>ร่างรายละเอียดขอบเขตงาน/คุณลักษณะที่จะจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>5. ตารางแสดงราคากลาง</strong> <span>สรุปราคากลางที่ใช้อ้างอิงในการจัดซื้อจัดจ้าง</span></li>
+                                        <li><strong>6. แบบ พ.84 หนังสือรับรองไม่มีผลประโยชน์ทับซ้อน</strong> <span>ผู้จัดทำ TOR/ราคากลางรับรองว่าไม่มีส่วนได้เสียกับผู้เสนองาน</span></li>
+                                        <li><strong>7. คำรับรองตรวจสอบผู้ประกอบการ SMEs และสินค้าที่ผลิตในประเทศไทย</strong> <span>ตรวจสอบสิทธิพิเศษผู้ประกอบการ SMEs</span></li>
+                                        <li><strong>8. ขออนุมัติร่างขอบเขตของงาน</strong> <span>ขออนุมัติดำเนินการจัดซื้อจัดจ้าง หลังเอกสารครบทุกข้อ</span></li>
+                                        <li><strong>📁 ตัวอย่างรายงานการประชุม</strong> <span>เอกสารบันทึกการประชุมและรายงานการประชุมคณะกรรมการ e-bidding</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                 </div>
+            </main>
 
-                <div class="tracking-metric-card metric-pending">
-                    <div class="tracking-metric-icon">⏳</div>
-                    <div class="tracking-metric-info">
-                        <span class="tracking-metric-label">รอดำเนินการ (ยังไม่เริ่ม)</span>
-                        <div class="tracking-metric-val"><span id="val-tracking-pending">0</span> <small>รายการ</small></div>
-                    </div>
+            <!-- Footer Section -->
+            <footer class="app-footer">
+                <div class="footer-content">
+                    <p>ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยวลัยลักษณ์ · ระบบติดตามงบประมาณ</p>
+                    <p class="developer-credit">พัฒนาโดยสุนันทา อาดหมาด ฝ่ายบริหารทั่วไปและธุรการ</p>
                 </div>
-            </div>
+            </footer>
 
-            <!-- Progress Bar Box -->
-            <div class="tracking-progress-box">
-                <div class="progress-header">
-                    <div class="progress-title-wrap">
-                        <span class="progress-title">📊 ความคืบหน้าการจัดทำเอกสารภาพรวม</span>
-                        <span class="progress-sub-info" id="tracking-progress-detail">(คำนวณจากรายการที่ไม่ใช่สถานะ 'รอดำเนินการ')</span>
-                    </div>
-                    <span class="progress-percent" id="tracking-progress-percent">0%</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar-fill" id="tracking-progress-fill" style="width: 0%;"></div>
-                </div>
-                <div class="progress-footer">
-                    <span id="tracking-progress-subtext">เริ่มดำเนินการแล้ว 0 จากทั้งหมด 0 รายการ (0%)</span>
-                    <span id="tracking-progress-completed-rate">เป้าหมาย: ดำเนินการให้แล้วเสร็จตามแผนงาน</span>
-                </div>
-            </div>
-
-            <!-- Tracking Toolbar -->
-            <div class="tracking-toolbar">
-                <div class="tracking-search-wrap">
-                    <span class="tracking-search-icon">🔍</span>
-                    <input type="text" class="tracking-search-input" id="tracking-search-input" placeholder="ค้นหาในกระดานติดตามสถานะ (ชื่อครุภัณฑ์, ผู้รับผิดชอบ Spec, สถานะเอกสาร)...">
-                </div>
-                <div class="tracking-filter-chips" id="tracking-filter-chips">
-                    <button class="chip active" data-status-filter="">ทั้งหมด</button>
-                    <button class="chip" data-status-filter="done">ส่งพัสดุ / ศคว. จัดซื้อเอง</button>
-                    <button class="chip" data-status-filter="pr">ออก PR Manual</button>
-                    <button class="chip" data-status-filter="tor">ขออนุมัติ TOR/ราคากลาง</button>
-                    <button class="chip" data-status-filter="spec">ร่าง Spec/สืบราคา</button>
-                    <button class="chip" data-status-filter="committee">แต่งตั้ง กก.</button>
-                    <button class="chip" data-status-filter="pending">รอดำเนินการ</button>
-                </div>
-            </div>
-
-            <!-- Tracking Table -->
-            <div class="table-wrapper tracking-table-wrapper">
-                <table class="tracking-table">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 80px;">ลำดับ</th>
-                            <th class="text-center" style="width: 140px;">ประเภทงบ</th>
-                            <th>ชื่อรายการครุภัณฑ์</th>
-                            <th style="width: 220px;">ผู้รับผิดชอบ Spec</th>
-                            <th class="text-center" style="width: 240px;">สถานะการทำเอกสาร</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tracking-table-body">
-                        <!-- Will be dynamically populated by app.js -->
-                    </tbody>
-                </table>
-            </div>
-
-        </section>
-
-        <!-- Data Grid & Explorer Section -->
-        <section class="data-section glass-panel" id="data-section">
-            
-            <div class="section-header">
-                <h2><span>🔍</span> รายการครุภัณฑ์ทั้งหมด</h2>
-            </div>
-
-            <!-- Filters Bar -->
-            <div class="filter-bar">
-                <div class="search-wrapper">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="search-input" placeholder="ค้นหาตามชื่อครุภัณฑ์, ผู้ขอ, ผู้รับผิดชอบ Spec หรือสถานที่ตั้ง...">
-                </div>
-
-                <select class="filter-select" id="filter-type">
-                    <option value="">กลุ่มงบประมาณทั้งหมด</option>
-                    <option value="science_tech">วิทยาศาสตร์และเทคโนโลยี</option>
-                    <option value="science_health">วิทยาศาสตร์สุขภาพ</option>
-                </select>
-
-                <select class="filter-select" id="filter-faculty">
-                    <option value="">หน่วยงาน/สำนักวิชาทั้งหมด</option>
-                    <!-- Will be dynamically populated -->
-                </select>
-
-                <button class="btn-clear" id="btn-clear-filters">
-                    <span>🔄</span> ล้างตัวกรอง
-                </button>
-            </div>
-
-            <!-- Budget Table -->
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th id="th-priority" class="text-center" style="width: 80px;">ลำดับ <span class="sort-icon"></span></th>
-                            <th id="th-type" class="text-center" style="width: 130px;">ประเภทงบ <span class="sort-icon"></span></th>
-                            <th id="th-name">ชื่อรายการครุภัณฑ์ <span class="sort-icon"></span></th>
-                            <th id="th-faculty">หน่วยงาน/สำนักวิชา <span class="sort-icon"></span></th>
-                            <th id="th-qty" class="text-center" style="width: 80px;">จำนวน <span class="sort-icon"></span></th>
-                            <th id="th-price" class="number-col" style="width: 140px;">ราคาต่อหน่วย <span class="sort-icon"></span></th>
-                            <th id="th-total" class="number-col" style="width: 150px;">ราคารวม <span class="sort-icon"></span></th>
-                            <th id="th-requester" style="width: 160px;">ผู้เสนอขอ <span class="sort-icon"></span></th>
-                            <th id="th-specmaker" style="width: 160px;">ผู้รับผิดชอบ Spec <span class="sort-icon"></span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <!-- Will be dynamically populated by app.js -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination Bar -->
-            <div class="pagination">
-                <div class="pagination-info" id="pagination-info">
-                    กำลังแสดงรายการที่ 0-0 จากทั้งหมด 0 รายการ
-                </div>
-                <div class="pagination-buttons">
-                    <button class="btn-page" id="btn-prev" disabled>ก่อนหน้า</button>
-                    <button class="btn-page" id="btn-next" disabled>ถัดไป</button>
-                </div>
-            </div>
-
-        </section>
-
-
+        </div>
     </div>
-
-    <!-- Footer Section -->
-    <footer class="app-footer">
-        <p>ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยวลัยลักษณ์ · ระบบติดตามงบประมาณ</p>
-        <p class="developer-credit">พัฒนาโดยสุนันทา อาดหมาด ฝ่ายบริหารทั่วไปและธุรการ</p>
-    </footer>
 
     <!-- Details Modal Overlay -->
     <div class="modal-overlay" id="modal-detail">
-        <div class="modal-content glass-panel">
+        <div class="modal-content admin-card">
             <button class="modal-close" id="modal-close-btn">&times;</button>
             
             <div class="modal-title-area">

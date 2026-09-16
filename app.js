@@ -95,7 +95,18 @@ document.addEventListener("DOMContentLoaded", () => {
         trackingProgressSubtext: document.getElementById("tracking-progress-subtext"),
         trackingTableBody: document.getElementById("tracking-table-body"),
         trackingSearchInput: document.getElementById("tracking-search-input"),
-        trackingFilterChips: document.getElementById("tracking-filter-chips")
+        trackingFilterChips: document.getElementById("tracking-filter-chips"),
+
+        themeIcon: document.getElementById("theme-icon"),
+        themeLabel: document.getElementById("theme-label"),
+        sidebarToggle: document.getElementById("sidebar-toggle"),
+        appSidebar: document.getElementById("app-sidebar"),
+        sidebarOverlay: document.getElementById("sidebar-overlay"),
+
+        dashboardSection: document.getElementById("dashboard-section"),
+        formsSection: document.getElementById("forms-section"),
+        topbarTitle: document.getElementById("topbar-page-title"),
+        topbarBreadcrumb: document.getElementById("topbar-breadcrumb")
     };
 
     const TODAY = new Date();
@@ -247,9 +258,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (state.charts.share) state.charts.share.destroy();
         if (state.charts.schools) state.charts.schools.destroy();
 
-        const isDark = elements.body ? elements.body.classList.contains("dark-theme") : true;
-        const textColor = isDark ? "#ECEAF5" : "#2d2645";
-        const gridColor = isDark ? "rgba(126, 101, 194, 0.12)" : "rgba(89, 69, 140, 0.08)";
+        const currentTheme = document.body.getAttribute('data-theme') || (document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        const isDark = currentTheme === 'dark';
+        const textColor = isDark ? "#ffffff" : "#1e293b";
+        const subTextColor = isDark ? "#94a3b8" : "#64748b";
+        const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
 
         let techSum = 0;
         let healthSum = 0;
@@ -267,9 +280,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     labels: ['วิทยาศาสตร์และเทคโนโลยี', 'วิทยาศาสตร์สุขภาพ'],
                     datasets: [{
                         data: [techSum, healthSum],
-                        backgroundColor: ['#7E65C2', '#E37222'],
-                        borderWidth: isDark ? 2 : 1,
-                        borderColor: isDark ? '#13111d' : '#ffffff'
+                        backgroundColor: isDark ? ['#10b981', '#0ea5e9'] : ['#2563eb', '#0284c7'],
+                        borderWidth: 2,
+                        borderColor: isDark ? '#151d2e' : '#ffffff'
                     }]
                 },
                 options: {
@@ -278,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: textColor, font: { family: 'Sarabun' } }
+                            labels: { color: textColor, font: { family: 'Sarabun', size: 12 } }
                         },
                         tooltip: {
                             callbacks: {
@@ -320,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     datasets: [{
                         label: 'งบประมาณรวม (บาท)',
                         data: sortedSchools.map(s => s.budget),
-                        backgroundColor: '#F1B521',
+                        backgroundColor: isDark ? '#10b981' : '#2563eb',
                         borderRadius: 6
                     }]
                 },
@@ -342,8 +355,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         x: {
                             grid: { color: gridColor },
                             ticks: {
-                                color: textColor,
-                                font: { family: 'Sarabun', size: 10 },
+                                color: subTextColor,
+                                font: { family: 'Sarabun', size: 11 },
                                 callback: function(value) {
                                     return value >= 1e6 ? (value / 1e6) + 'M' : value;
                                 }
@@ -351,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         },
                         y: {
                             grid: { display: false },
-                            ticks: { color: textColor, font: { family: 'Sarabun', size: 10 } }
+                            ticks: { color: textColor, font: { family: 'Sarabun', size: 11 } }
                         }
                     }
                 }
@@ -1189,16 +1202,103 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    if (elements.themeToggle) {
-        elements.themeToggle.addEventListener("click", () => {
-            if (elements.body) {
-                elements.body.classList.toggle("dark-theme");
-                const isDark = elements.body.classList.contains("dark-theme");
-                const thumb = elements.themeToggle.querySelector(".theme-switch-thumb");
-                if (thumb) thumb.textContent = isDark ? "🌙" : "☀️";
+    function getInitialTheme() {
+        const saved = localStorage.getItem('cse_wu_budget_theme');
+        if (saved === 'light' || saved === 'dark') return saved;
+        return 'dark'; // Default to dark theme for premium aesthetics
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        document.body.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            if (elements.themeIcon) elements.themeIcon.textContent = '🌙';
+            if (elements.themeLabel) elements.themeLabel.textContent = 'Dark Mode';
+        } else {
+            document.body.classList.remove('dark-theme');
+            if (elements.themeIcon) elements.themeIcon.textContent = '☀️';
+            if (elements.themeLabel) elements.themeLabel.textContent = 'Light Mode';
+        }
+        localStorage.setItem('cse_wu_budget_theme', theme);
+    }
+
+    function toggleTheme() {
+        const current = document.body.getAttribute('data-theme') || (document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        const next = current === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+        renderCharts();
+        renderTable();
+    }
+
+    function switchTab(tabName, targetId) {
+        if (tabName === 'forms') {
+            if (elements.dashboardSection) elements.dashboardSection.style.display = 'none';
+            if (elements.formsSection) {
+                elements.formsSection.style.display = 'block';
+                elements.formsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            renderTable();
-        });
+            if (elements.topbarTitle) elements.topbarTitle.textContent = 'แบบฟอร์มการจัดซื้อ';
+            if (elements.topbarBreadcrumb) elements.topbarBreadcrumb.textContent = 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · แบบฟอร์มและเอกสาร';
+        } else {
+            if (elements.formsSection) elements.formsSection.style.display = 'none';
+            if (elements.dashboardSection) elements.dashboardSection.style.display = 'flex';
+            if (elements.topbarTitle) elements.topbarTitle.textContent = 'ระบบงบลงทุนและแผนจัดซื้อจัดจ้าง 2570';
+            if (elements.topbarBreadcrumb) elements.topbarBreadcrumb.textContent = 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี';
+
+            if (targetId) {
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    setTimeout(() => {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 50);
+                }
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    }
+
+    function initSidebar() {
+        if (elements.sidebarToggle && elements.appSidebar) {
+            elements.sidebarToggle.addEventListener('click', () => {
+                elements.appSidebar.classList.toggle('sidebar-open');
+                if (elements.sidebarOverlay) {
+                    elements.sidebarOverlay.classList.toggle('active');
+                }
+            });
+        }
+
+        if (elements.sidebarOverlay && elements.appSidebar) {
+            elements.sidebarOverlay.addEventListener('click', () => {
+                elements.appSidebar.classList.remove('sidebar-open');
+                elements.sidebarOverlay.classList.remove('active');
+            });
+        }
+
+        if (elements.appSidebar) {
+            const links = elements.appSidebar.querySelectorAll('.sidebar-link');
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    const tabName = link.dataset.tab || 'dashboard';
+                    const targetId = link.dataset.target;
+                    switchTab(tabName, targetId);
+
+                    if (window.innerWidth <= 992) {
+                        elements.appSidebar.classList.remove('sidebar-open');
+                        if (elements.sidebarOverlay) elements.sidebarOverlay.classList.remove('active');
+                    }
+                });
+            });
+        }
+    }
+
+    if (elements.themeToggle) {
+        elements.themeToggle.addEventListener("click", toggleTheme);
     }
 
     if (elements.modalCloseBtn) {
@@ -1281,26 +1381,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    applyTheme(getInitialTheme());
+    initSidebar();
     initDateHeader();
     initTimeline();
     initTrackingListeners();
     loadDataset();
-});
-
-// Function for Forms Modal
-function openFormsModal(e) {
-    if(e) e.preventDefault();
-    document.getElementById('formsModal').classList.add('show');
-}
-function closeFormsModal() {
-    document.getElementById('formsModal').classList.remove('show');
-}
-// ปิดหน้าต่างเมื่อคลิกพื้นที่ว่างด้านนอก
-window.addEventListener('click', function(e) {
-    const modal = document.getElementById('formsModal');
-    if (e.target === modal) {
-        closeFormsModal();
-    }
 });
 
 // Function for Forms Accordion
@@ -1308,10 +1394,10 @@ function toggleAccordion(btn) {
     const content = btn.nextElementSibling;
     const arrow = btn.querySelector('.icon-arrow');
     btn.classList.toggle('active');
-    content.classList.toggle('active');
-    if (content.classList.contains('active')) {
-        arrow.textContent = '▲';
-    } else {
-        arrow.textContent = '▼';
+    if (content) {
+        content.classList.toggle('active');
+        if (arrow) {
+            arrow.textContent = content.classList.contains('active') ? '▲' : '▼';
+        }
     }
 }
