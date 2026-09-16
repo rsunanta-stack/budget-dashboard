@@ -207,6 +207,42 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function setLoadingState() {
+        if (elements.valTechBudget) elements.valTechBudget.textContent = "กำลังโหลด...";
+        if (elements.valTechCount) elements.valTechCount.textContent = "- รายการ";
+        if (elements.valHealthBudget) elements.valHealthBudget.textContent = "กำลังโหลด...";
+        if (elements.valHealthCount) elements.valHealthCount.textContent = "- รายการ";
+        if (elements.valTotalBudget) elements.valTotalBudget.textContent = "กำลังโหลด...";
+        if (elements.valTotalCount) elements.valTotalCount.textContent = "- รายการ";
+
+        if (elements.valStatusCommittee) elements.valStatusCommittee.textContent = "-";
+        if (elements.valStatusSpec) elements.valStatusSpec.textContent = "-";
+        if (elements.valStatusTor) elements.valStatusTor.textContent = "-";
+        if (elements.valStatusPr) elements.valStatusPr.textContent = "-";
+        if (elements.valStatusSent) elements.valStatusSent.textContent = "-";
+        if (elements.valStatusSelf) elements.valStatusSelf.textContent = "-";
+
+        if (elements.tableBody) {
+            elements.tableBody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 40px; color: var(--text-secondary);">
+                        🔄 กำลังเชื่อมต่อและโหลดข้อมูลรายการครุภัณฑ์...
+                    </td>
+                </tr>
+            `;
+        }
+
+        if (elements.trackingTableBody) {
+            elements.trackingTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center" style="padding: 35px; color: var(--text-secondary);">
+                        🔄 กำลังเชื่อมต่อและโหลดข้อมูลติดตามเอกสาร...
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
     function updateKPIs() {
         let techBudget = 0;
         let techCount = 0;
@@ -1502,13 +1538,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    applyTheme(getInitialTheme());
-    initSidebar();
-    initDateHeader();
-    initTimeline();
-    initTrackingListeners();
-    switchTab('overview-section');
-    loadDataset();
+    async function initApp() {
+        applyTheme(getInitialTheme());
+        initSidebar();
+        initDateHeader();
+        initTimeline();
+        initTrackingListeners();
+        setLoadingState();
+
+        // 1. Force await data fetch from Google Sheets (or fallback) to 100% completion
+        await loadDataset();
+
+        // 2. Render all views and populate DOM
+        updateKPIs();
+        initFilterOptions();
+        renderTable();
+        renderTracking();
+
+        // 3. switchTab is executed at the very last step after all DOM elements are populated
+        switchTab('overview-section');
+    }
+
+    initApp();
 });
 
 // Function for Forms Accordion
