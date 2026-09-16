@@ -103,7 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
         appSidebar: document.getElementById("app-sidebar"),
         sidebarOverlay: document.getElementById("sidebar-overlay"),
 
-        dashboardSection: document.getElementById("dashboard-section"),
+        overviewSection: document.getElementById("overview-section"),
+        trackingSection: document.getElementById("tracking-section"),
+        datagridSection: document.getElementById("datagrid-section"),
         formsSection: document.getElementById("forms-section"),
         topbarTitle: document.getElementById("topbar-page-title"),
         topbarBreadcrumb: document.getElementById("topbar-breadcrumb")
@@ -1231,33 +1233,76 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTable();
     }
 
-    function switchTab(tabName, targetId) {
-        if (tabName === 'forms') {
-            if (elements.dashboardSection) elements.dashboardSection.style.display = 'none';
-            if (elements.formsSection) {
-                elements.formsSection.style.display = 'block';
-                elements.formsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            if (elements.topbarTitle) elements.topbarTitle.textContent = 'แบบฟอร์มการจัดซื้อ';
-            if (elements.topbarBreadcrumb) elements.topbarBreadcrumb.textContent = 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · แบบฟอร์มและเอกสาร';
-        } else {
-            if (elements.formsSection) elements.formsSection.style.display = 'none';
-            if (elements.dashboardSection) elements.dashboardSection.style.display = 'flex';
-            if (elements.topbarTitle) elements.topbarTitle.textContent = 'ระบบงบลงทุนและแผนจัดซื้อจัดจ้าง 2570';
-            if (elements.topbarBreadcrumb) elements.topbarBreadcrumb.textContent = 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี';
+    const SECTION_IDS = ['overview-section', 'tracking-section', 'datagrid-section', 'forms-section'];
 
-            if (targetId) {
-                const targetEl = document.getElementById(targetId);
-                if (targetEl) {
-                    setTimeout(() => {
-                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 50);
-                }
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+    const TAB_INFO = {
+        'overview-section': {
+            title: 'ระบบงบลงทุนและแผนจัดซื้อจัดจ้าง 2570',
+            breadcrumb: 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · ภาพรวมงบประมาณ'
+        },
+        'tracking-section': {
+            title: 'กระดานติดตามสถานะการจัดทำเอกสาร',
+            breadcrumb: 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · ติดตามสถานะ'
+        },
+        'datagrid-section': {
+            title: 'ข้อมูลรายการครุภัณฑ์ทั้งหมด',
+            breadcrumb: 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · รายการครุภัณฑ์'
+        },
+        'forms-section': {
+            title: 'แบบฟอร์มการจัดซื้อ',
+            breadcrumb: 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · แบบฟอร์มและเอกสาร'
+        }
+    };
+
+    function switchTab(tabId) {
+        const targetId = tabId || 'overview-section';
+
+        // 1. Hide all SPA sections
+        SECTION_IDS.forEach(id => {
+            const sec = document.getElementById(id);
+            if (sec) {
+                sec.style.display = 'none';
             }
+        });
+
+        // 2. Show the active section
+        const activeSection = document.getElementById(targetId);
+        if (activeSection) {
+            activeSection.style.display = targetId === 'overview-section' ? 'flex' : 'block';
+        }
+
+        // 3. Update topbar title & breadcrumb
+        if (TAB_INFO[targetId]) {
+            if (elements.topbarTitle) elements.topbarTitle.textContent = TAB_INFO[targetId].title;
+            if (elements.topbarBreadcrumb) elements.topbarBreadcrumb.textContent = TAB_INFO[targetId].breadcrumb;
+        }
+
+        // 4. Update sidebar active state
+        if (elements.appSidebar) {
+            const links = elements.appSidebar.querySelectorAll('.sidebar-link');
+            links.forEach(link => {
+                if (link.dataset.tab === targetId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // 5. Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // 6. Trigger charts resize/render if overview-section is shown
+        if (targetId === 'overview-section') {
+            setTimeout(() => {
+                if (state.charts.share) state.charts.share.resize();
+                if (state.charts.schools) state.charts.schools.resize();
+            }, 60);
         }
     }
+
+    // Expose switchTab globally for external or inline calls if needed
+    window.switchTab = switchTab;
 
     function initSidebar() {
         if (elements.sidebarToggle && elements.appSidebar) {
@@ -1281,12 +1326,8 @@ document.addEventListener("DOMContentLoaded", () => {
             links.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    links.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-
-                    const tabName = link.dataset.tab || 'dashboard';
-                    const targetId = link.dataset.target;
-                    switchTab(tabName, targetId);
+                    const tabId = link.dataset.tab || 'overview-section';
+                    switchTab(tabId);
 
                     if (window.innerWidth <= 992) {
                         elements.appSidebar.classList.remove('sidebar-open');
@@ -1386,6 +1427,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initDateHeader();
     initTimeline();
     initTrackingListeners();
+    switchTab('overview-section');
     loadDataset();
 });
 

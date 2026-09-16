@@ -24,25 +24,21 @@
 
             <nav class="sidebar-nav">
                 <div class="nav-section-label">เมนูหลัก</div>
-                <a href="#metrics-overview" class="sidebar-link active" data-tab="dashboard" data-target="metrics-overview">
+                <a href="#overview-section" class="sidebar-link active" data-tab="overview-section">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">ภาพรวมงบประมาณ</span>
                 </a>
-                <a href="#timeline-section" class="sidebar-link" data-tab="dashboard" data-target="timeline-section">
-                    <span class="nav-icon">⏰</span>
-                    <span class="nav-text">แผนการจัดซื้อจัดจ้าง</span>
-                </a>
-                <a href="#tracking-section" class="sidebar-link" data-tab="dashboard" data-target="tracking-section">
+                <a href="#tracking-section" class="sidebar-link" data-tab="tracking-section">
                     <span class="nav-icon">📋</span>
                     <span class="nav-text">ติดตามสถานะเอกสาร</span>
                 </a>
-                <a href="#data-section" class="sidebar-link" data-tab="dashboard" data-target="data-section">
+                <a href="#datagrid-section" class="sidebar-link" data-tab="datagrid-section">
                     <span class="nav-icon">📦</span>
                     <span class="nav-text">ข้อมูลรายการครุภัณฑ์</span>
                 </a>
 
                 <div class="nav-section-label" style="margin-top: 24px;">แบบฟอร์ม & เอกสาร</div>
-                <a href="#forms-section" class="sidebar-link" data-tab="forms" data-target="forms-section" id="nav-forms">
+                <a href="#forms-section" class="sidebar-link" data-tab="forms-section" id="nav-forms">
                     <span class="nav-icon">📁</span>
                     <span class="nav-text">แบบฟอร์มการจัดซื้อ</span>
                 </a>
@@ -93,117 +89,117 @@
             <main class="app-main" id="dashboard-top">
                 <div class="content-container">
 
-                    <!-- Dashboard Tab Content -->
-                    <div id="dashboard-section" style="display: flex; flex-direction: column; gap: 28px; width: 100%;">
-
-                    <!-- Timeline Section -->
-                    <section class="admin-card timeline-section" id="timeline-section">
-                        <div class="section-header">
-                            <h2>
-                                <span>⏰</span> แผนการจัดซื้อจัดจ้าง งบลงทุนประจำปีงบประมาณ พ.ศ. 2570
-                            </h2>
-                            <!-- Stepper Banner -->
-                            <div class="stepper-banner" id="stepper-banner">
-                                <div class="stepper-step step-6">
-                                    <div class="step-badge">6</div>
-                                    <div class="step-info">
-                                        <span class="step-date">ก.ค. 69</span>
-                                        <span class="step-title">พิจารณาร่าง พ.ร.บ. งบประมาณ</span>
+                    <!-- Section 1: ภาพรวมงบประมาณ (Overview) -->
+                    <section class="spa-section" id="overview-section">
+                        <!-- Timeline Section -->
+                        <div class="admin-card timeline-section" id="timeline-section">
+                            <div class="section-header">
+                                <h2>
+                                    <span>⏰</span> แผนการจัดซื้อจัดจ้าง งบลงทุนประจำปีงบประมาณ พ.ศ. 2570
+                                </h2>
+                                <!-- Stepper Banner -->
+                                <div class="stepper-banner" id="stepper-banner">
+                                    <div class="stepper-step step-6">
+                                        <div class="step-badge">6</div>
+                                        <div class="step-info">
+                                            <span class="step-date">ก.ค. 69</span>
+                                            <span class="step-title">พิจารณาร่าง พ.ร.บ. งบประมาณ</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="stepper-step step-7">
-                                    <div class="step-badge">7</div>
-                                    <div class="step-info">
-                                        <span class="step-date">ก.ค. 69</span>
-                                        <span class="step-title">ชี้แจงงบประมาณ</span>
+                                    <div class="stepper-step step-7">
+                                        <div class="step-badge">7</div>
+                                        <div class="step-info">
+                                            <span class="step-date">ก.ค. 69</span>
+                                            <span class="step-title">ชี้แจงงบประมาณ</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="stepper-step step-8">
-                                    <div class="step-badge">8</div>
-                                    <div class="step-info">
-                                        <span class="step-date">ก.ค. - ส.ค. 69</span>
-                                        <span class="step-title">จัดทำเอกสารและ Spec</span>
+                                    <div class="stepper-step step-8">
+                                        <div class="step-badge">8</div>
+                                        <div class="step-info">
+                                            <span class="step-date">ก.ค. - ส.ค. 69</span>
+                                            <span class="step-title">จัดทำเอกสารและ Spec</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="stepper-step step-9">
-                                    <div class="step-badge">9</div>
-                                    <div class="step-info">
-                                        <span class="step-date">1 ส.ค. 69</span>
-                                        <span class="step-title">เริ่มออก PR แบบ manual</span>
+                                    <div class="stepper-step step-9">
+                                        <div class="step-badge">9</div>
+                                        <div class="step-info">
+                                            <span class="step-date">1 ส.ค. 69</span>
+                                            <span class="step-title">เริ่มออก PR แบบ manual</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="stepper-step step-10">
-                                    <div class="step-badge">10</div>
-                                    <div class="step-info">
-                                        <span class="step-date">31 ส.ค. 69</span>
-                                        <span class="step-title">วันสุดท้ายการส่ง Spec</span>
+                                    <div class="stepper-step step-10">
+                                        <div class="step-badge">10</div>
+                                        <div class="step-info">
+                                            <span class="step-date">31 ส.ค. 69</span>
+                                            <span class="step-title">วันสุดท้ายการส่ง Spec</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Visual Timeline Slider -->
+                            <div class="timeline-tracker" id="timeline-container">
+                                <!-- Will be dynamically populated by app.js -->
+                            </div>
                         </div>
 
-                        <!-- Visual Timeline Slider -->
-                        <div class="timeline-tracker" id="timeline-container">
-                            <!-- Will be dynamically populated by app.js -->
+                        <!-- Metrics Overview Section (Solid Colors) -->
+                        <div class="metrics-grid" id="metrics-overview">
+                            
+                            <!-- Metric 1: Blue Solid -->
+                            <div class="metric-card card-solid-blue">
+                                <div class="metric-header">
+                                    <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
+                                    <div class="metric-icon">🔬</div>
+                                </div>
+                                <div class="metric-value" id="val-tech-budget">0.00 ฿</div>
+                                <div class="metric-subtext" id="val-tech-count">0 รายการ</div>
+                            </div>
+
+                            <!-- Metric 2: Cyan Solid -->
+                            <div class="metric-card card-solid-cyan">
+                                <div class="metric-header">
+                                    <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
+                                    <div class="metric-icon">🏥</div>
+                                </div>
+                                <div class="metric-value" id="val-health-budget">0.00 ฿</div>
+                                <div class="metric-subtext" id="val-health-count">0 รายการ</div>
+                            </div>
+
+                            <!-- Metric 3: Amber/Orange Solid -->
+                            <div class="metric-card card-solid-orange">
+                                <div class="metric-header">
+                                    <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
+                                    <div class="metric-icon">💰</div>
+                                </div>
+                                <div class="metric-value" id="val-total-budget">0.00 ฿</div>
+                                <div class="metric-subtext" id="val-total-count">0 รายการ (เฉลี่ย 0 ฿ ต่อชิ้น)</div>
+                            </div>
+
+                        </div>
+
+                        <!-- Charts Grid Section -->
+                        <div class="charts-grid">
+                            
+                            <div class="admin-card chart-card">
+                                <h3 class="chart-title">สัดส่วนงบประมาณแยกตามสาขา (Budget Share)</h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="chart-share"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="admin-card chart-card">
+                                <h3 class="chart-title">งบประมาณรวมสูงสุด 5 อันดับแรกแยกตามหน่วยงาน/สำนักวิชา</h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="chart-schools"></canvas>
+                                </div>
+                            </div>
+
                         </div>
                     </section>
 
-                    <!-- Metrics Overview Section (Solid Colors) -->
-                    <section class="metrics-grid" id="metrics-overview">
-                        
-                        <!-- Metric 1: Blue Solid -->
-                        <div class="metric-card card-solid-blue">
-                            <div class="metric-header">
-                                <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
-                                <div class="metric-icon">🔬</div>
-                            </div>
-                            <div class="metric-value" id="val-tech-budget">0.00 ฿</div>
-                            <div class="metric-subtext" id="val-tech-count">0 รายการ</div>
-                        </div>
-
-                        <!-- Metric 2: Cyan Solid -->
-                        <div class="metric-card card-solid-cyan">
-                            <div class="metric-header">
-                                <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
-                                <div class="metric-icon">🏥</div>
-                            </div>
-                            <div class="metric-value" id="val-health-budget">0.00 ฿</div>
-                            <div class="metric-subtext" id="val-health-count">0 รายการ</div>
-                        </div>
-
-                        <!-- Metric 3: Amber/Orange Solid -->
-                        <div class="metric-card card-solid-orange">
-                            <div class="metric-header">
-                                <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
-                                <div class="metric-icon">💰</div>
-                            </div>
-                            <div class="metric-value" id="val-total-budget">0.00 ฿</div>
-                            <div class="metric-subtext" id="val-total-count">0 รายการ (เฉลี่ย 0 ฿ ต่อชิ้น)</div>
-                        </div>
-
-                    </section>
-
-                    <!-- Charts Grid Section -->
-                    <section class="charts-grid">
-                        
-                        <div class="admin-card chart-card">
-                            <h3 class="chart-title">สัดส่วนงบประมาณแยกตามสาขา (Budget Share)</h3>
-                            <div class="chart-wrapper">
-                                <canvas id="chart-share"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="admin-card chart-card">
-                            <h3 class="chart-title">งบประมาณรวมสูงสุด 5 อันดับแรกแยกตามหน่วยงาน/สำนักวิชา</h3>
-                            <div class="chart-wrapper">
-                                <canvas id="chart-schools"></canvas>
-                            </div>
-                        </div>
-
-                    </section>
-
-                    <!-- Tracking Section (กระดานติดตามสถานะการจัดทำเอกสาร) -->
-                    <section class="admin-card tracking-section" id="tracking-section">
+                    <!-- Section 2: กระดานติดตามสถานะเอกสาร -->
+                    <section class="admin-card tracking-section spa-section" id="tracking-section" style="display: none;">
                         <div class="section-header">
                             <h2><span>📋</span> กระดานติดตามสถานะการจัดทำเอกสาร</h2>
                         </div>
@@ -298,8 +294,8 @@
 
                     </section>
 
-                    <!-- Data Grid & Explorer Section -->
-                    <section class="admin-card data-section" id="data-section">
+                    <!-- Section 3: ข้อมูลรายการครุภัณฑ์ (Data Grid) -->
+                    <section class="admin-card data-section spa-section" id="datagrid-section" style="display: none;">
                         
                         <div class="section-header">
                             <h2><span>🔍</span> รายการครุภัณฑ์ทั้งหมด</h2>
@@ -362,11 +358,9 @@
                         </div>
 
                     </section>
-                    </div>
-                    <!-- End Dashboard Tab Content -->
 
-                    <!-- Procurement Forms Tab Section (SPA) -->
-                    <section class="admin-card forms-section" id="forms-section" style="display: none;">
+                    <!-- Section 4: แบบฟอร์มการจัดซื้อ (Forms) -->
+                    <section class="admin-card forms-section spa-section" id="forms-section" style="display: none;">
                         <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 24px;">
                             <h2><span>📁</span> แบบฟอร์มการจัดซื้อ</h2>
                             <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem;">คลิกเลือกวิธีจัดซื้อ เพื่อดูคำอธิบายและเข้าสู่โฟลเดอร์ดาวน์โหลดเอกสาร (Google Drive)</p>

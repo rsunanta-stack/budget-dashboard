@@ -1575,14 +1575,19 @@ body.dark-theme .badge-status-done {
 }
 
 /* ==========================================================================
-   Forms Section & Accordion Styles (SPA & Light/Dark Theme Reactive)
+   SPA Sections & Forms (True SPA Tab System)
    ========================================================================== */
-.forms-section {
-    padding: 30px 32px;
-    animation: formsFadeIn 0.3s ease;
+.spa-section {
+    animation: spaFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes formsFadeIn {
+#overview-section {
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+}
+
+@keyframes spaFadeIn {
     from {
         opacity: 0;
         transform: translateY(6px);
@@ -1591,6 +1596,10 @@ body.dark-theme .badge-status-done {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.forms-section {
+    padding: 30px 32px;
 }
 
 .accordion-container {
