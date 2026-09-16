@@ -85,10 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
         modalBadgeStatus: document.getElementById("modal-badge-status"),
         modalDocStatus: document.getElementById("modal-doc-status"),
         
-        valTrackingSent: document.getElementById("val-tracking-sent"),
-        valTrackingSelf: document.getElementById("val-tracking-self"),
-        valTrackingInprogress: document.getElementById("val-tracking-inprogress"),
-        valTrackingPending: document.getElementById("val-tracking-pending"),
+        valStatusPending: document.getElementById("val-status-pending"),
+        valStatusCommittee: document.getElementById("val-status-committee"),
+        valStatusSpec: document.getElementById("val-status-spec"),
+        valStatusTor: document.getElementById("val-status-tor"),
+        valStatusPr: document.getElementById("val-status-pr"),
+        valStatusSent: document.getElementById("val-status-sent"),
+        valStatusSelf: document.getElementById("val-status-self"),
         
         trackingProgressPercent: document.getElementById("tracking-progress-percent"),
         trackingProgressFill: document.getElementById("tracking-progress-fill"),
@@ -611,9 +614,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 label: s
             };
         }
-        if (s.includes('ส่งส่วนพัสดุ') || s.includes('จัดซื้อเอง') || s.includes('เรียบร้อย')) {
+        if (s.includes('ส่งส่วนพัสดุ')) {
             return {
-                className: 'badge-status-done',
+                className: 'badge-status-sent',
+                label: s
+            };
+        }
+        if (s.includes('จัดซื้อเอง') || s.includes('ศคว.')) {
+            return {
+                className: 'badge-status-self',
                 label: s
             };
         }
@@ -1013,39 +1022,53 @@ document.addEventListener("DOMContentLoaded", () => {
         const tbody = elements.trackingTableBody || document.getElementById("tracking-table-body");
         if (!tbody) return;
 
-        // 1. Calculate Metrics & Progress
+        // 1. Calculate 7 Status Metrics & Progress
         const totalItems = state.items.length;
-        let sentCount = 0;
-        let selfCount = 0;
-        let inProgressCount = 0;
-        let pendingCount = 0;
+        let countPending = 0;
+        let countCommittee = 0;
+        let countSpec = 0;
+        let countTor = 0;
+        let countPr = 0;
+        let countSent = 0;
+        let countSelf = 0;
         let startedCount = 0;
 
         state.items.forEach(item => {
-            const status = item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)';
-            const isPending = !status || status.includes('รอดำเนินการ');
-            
-            if (status.includes('ส่งส่วนพัสดุเรียบร้อย')) {
-                sentCount++;
-                startedCount++;
-            } else if (status.includes('ศคว. ดำเนินการจัดซื้อเอง')) {
-                selfCount++;
-                startedCount++;
-            } else if (isPending) {
-                pendingCount++;
+            const status = (item.docStatus || '').trim();
+            const lower = status.toLowerCase();
+
+            if (!status || status.includes('รอดำเนินการ')) {
+                countPending++;
             } else {
-                inProgressCount++;
                 startedCount++;
+                if (status.includes('ส่งส่วนพัสดุ')) {
+                    countSent++;
+                } else if (status.includes('จัดซื้อเอง') || status.includes('ศคว.')) {
+                    countSelf++;
+                } else if (status.includes('PR Manual') || status.includes('ออก PR') || lower.includes('pr')) {
+                    countPr++;
+                } else if (status.includes('TOR') || status.includes('ราคากลาง')) {
+                    countTor++;
+                } else if (status.includes('ร่าง Spec') || status.includes('สืบราคา') || lower.includes('spec')) {
+                    countSpec++;
+                } else if (status.includes('แต่งตั้ง') || status.includes('คณะกรรมการ')) {
+                    countCommittee++;
+                } else {
+                    countSpec++;
+                }
             }
         });
 
         const percent = totalItems > 0 ? ((startedCount / totalItems) * 100).toFixed(1) : "0.0";
 
-        // Update DOM Metrics
-        if (elements.valTrackingSent) elements.valTrackingSent.textContent = formatNumber(sentCount);
-        if (elements.valTrackingSelf) elements.valTrackingSelf.textContent = formatNumber(selfCount);
-        if (elements.valTrackingInprogress) elements.valTrackingInprogress.textContent = formatNumber(inProgressCount);
-        if (elements.valTrackingPending) elements.valTrackingPending.textContent = formatNumber(pendingCount);
+        // Update DOM Metrics for all 7 statuses
+        if (elements.valStatusPending) elements.valStatusPending.textContent = formatNumber(countPending);
+        if (elements.valStatusCommittee) elements.valStatusCommittee.textContent = formatNumber(countCommittee);
+        if (elements.valStatusSpec) elements.valStatusSpec.textContent = formatNumber(countSpec);
+        if (elements.valStatusTor) elements.valStatusTor.textContent = formatNumber(countTor);
+        if (elements.valStatusPr) elements.valStatusPr.textContent = formatNumber(countPr);
+        if (elements.valStatusSent) elements.valStatusSent.textContent = formatNumber(countSent);
+        if (elements.valStatusSelf) elements.valStatusSelf.textContent = formatNumber(countSelf);
 
         // Update Progress Bar
         if (elements.trackingProgressPercent) elements.trackingProgressPercent.textContent = `${percent}%`;
@@ -1074,25 +1097,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!matchesSearch) return false;
 
-            // Status chip filter matching
+            // Status chip filter matching for all 7 statuses
             if (!trackingActiveFilter) return true;
-            if (trackingActiveFilter === 'done') {
-                return itemStatus.includes('ส่งส่วนพัสดุ') || itemStatus.includes('จัดซื้อเอง') || itemStatus.includes('เรียบร้อย');
-            }
-            if (trackingActiveFilter === 'pr') {
-                return itemStatus.includes('pr') || itemStatus.includes('ออก pr');
-            }
-            if (trackingActiveFilter === 'tor') {
-                return itemStatus.includes('tor') || itemStatus.includes('ราคากลาง');
-            }
-            if (trackingActiveFilter === 'spec') {
-                return itemStatus.includes('spec') || itemStatus.includes('สืบราคา');
+            if (trackingActiveFilter === 'pending') {
+                return itemStatus.includes('รอดำเนินการ') || !item.docStatus;
             }
             if (trackingActiveFilter === 'committee') {
                 return itemStatus.includes('แต่งตั้ง') || itemStatus.includes('คณะกรรมการ');
             }
-            if (trackingActiveFilter === 'pending') {
-                return itemStatus.includes('รอดำเนินการ');
+            if (trackingActiveFilter === 'spec') {
+                return itemStatus.includes('spec') || itemStatus.includes('สืบราคา');
+            }
+            if (trackingActiveFilter === 'tor') {
+                return itemStatus.includes('tor') || itemStatus.includes('ราคากลาง');
+            }
+            if (trackingActiveFilter === 'pr') {
+                return itemStatus.includes('pr') || itemStatus.includes('ออก pr');
+            }
+            if (trackingActiveFilter === 'sent') {
+                return itemStatus.includes('ส่งส่วนพัสดุ');
+            }
+            if (trackingActiveFilter === 'self') {
+                return itemStatus.includes('จัดซื้อเอง') || itemStatus.includes('ศคว.');
             }
             return true;
         });
@@ -1202,6 +1228,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
         }
+
+        // Allow clicking metric cards to filter table directly
+        const metricCardMap = [
+            { selector: '.tracking-metric-card.metric-pending', filter: 'pending' },
+            { selector: '.tracking-metric-card.metric-committee', filter: 'committee' },
+            { selector: '.tracking-metric-card.metric-spec', filter: 'spec' },
+            { selector: '.tracking-metric-card.metric-tor', filter: 'tor' },
+            { selector: '.tracking-metric-card.metric-pr', filter: 'pr' },
+            { selector: '.tracking-metric-card.metric-sent', filter: 'sent' },
+            { selector: '.tracking-metric-card.metric-self', filter: 'self' }
+        ];
+
+        metricCardMap.forEach(m => {
+            const cardEl = document.querySelector(m.selector);
+            if (cardEl) {
+                cardEl.addEventListener('click', () => {
+                    trackingActiveFilter = (trackingActiveFilter === m.filter) ? '' : m.filter;
+                    if (elements.trackingFilterChips) {
+                        const chips = elements.trackingFilterChips.querySelectorAll('.chip');
+                        chips.forEach(c => {
+                            if ((c.dataset.statusFilter || '') === trackingActiveFilter) {
+                                c.classList.add('active');
+                            } else {
+                                c.classList.remove('active');
+                            }
+                        });
+                    }
+                    renderTracking();
+                });
+            }
+        });
     }
 
     function getInitialTheme() {

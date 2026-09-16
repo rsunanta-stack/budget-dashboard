@@ -204,37 +204,68 @@
                             <h2><span>📋</span> กระดานติดตามสถานะการจัดทำเอกสาร</h2>
                         </div>
 
-                        <!-- Overview Metrics -->
+                        <!-- 7 Tracking Status Metric Cards -->
                         <div class="tracking-metrics-grid">
-                            <div class="tracking-metric-card metric-sent">
-                                <div class="tracking-metric-icon">📦</div>
-                                <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">ส่งส่วนพัสดุเรียบร้อย</span>
-                                    <div class="tracking-metric-val"><span id="val-tracking-sent">0</span> <small>รายการ</small></div>
-                                </div>
-                            </div>
-
-                            <div class="tracking-metric-card metric-self">
-                                <div class="tracking-metric-icon">🏢</div>
-                                <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">ศคว. ดำเนินการจัดซื้อเอง</span>
-                                    <div class="tracking-metric-val"><span id="val-tracking-self">0</span> <small>รายการ</small></div>
-                                </div>
-                            </div>
-
-                            <div class="tracking-metric-card metric-inprogress">
-                                <div class="tracking-metric-icon">⚡</div>
-                                <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">อยู่ระหว่างดำเนินการ</span>
-                                    <div class="tracking-metric-val"><span id="val-tracking-inprogress">0</span> <small>รายการ</small></div>
-                                </div>
-                            </div>
-
-                            <div class="tracking-metric-card metric-pending">
+                            <!-- Status 1: รอดำเนินการ (ยังไม่เริ่ม) -->
+                            <div class="tracking-metric-card metric-pending" title="คลิกเพื่อกรองสถานะนี้">
                                 <div class="tracking-metric-icon">⏳</div>
                                 <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">รอดำเนินการ (ยังไม่เริ่ม)</span>
-                                    <div class="tracking-metric-val"><span id="val-tracking-pending">0</span> <small>รายการ</small></div>
+                                    <span class="tracking-metric-label">1. รอดำเนินการ (ยังไม่เริ่ม)</span>
+                                    <div class="tracking-metric-val"><span id="val-status-pending">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <!-- Status 2: จัดทำคำสั่งแต่งตั้งคณะกรรมการ -->
+                            <div class="tracking-metric-card metric-committee" title="คลิกเพื่อกรองสถานะนี้">
+                                <div class="tracking-metric-icon">📜</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">2. แต่งตั้งคณะกรรมการ</span>
+                                    <div class="tracking-metric-val"><span id="val-status-committee">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <!-- Status 3: อยู่ระหว่างจัดทำร่าง Spec / สืบราคา -->
+                            <div class="tracking-metric-card metric-spec" title="คลิกเพื่อกรองสถานะนี้">
+                                <div class="tracking-metric-icon">📝</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">3. ร่าง Spec / สืบราคา</span>
+                                    <div class="tracking-metric-val"><span id="val-status-spec">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <!-- Status 4: เสนอขออนุมัติ TOR และราคากลาง -->
+                            <div class="tracking-metric-card metric-tor" title="คลิกเพื่อกรองสถานะนี้">
+                                <div class="tracking-metric-icon">📑</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">4. ขออนุมัติ TOR/ราคากลาง</span>
+                                    <div class="tracking-metric-val"><span id="val-status-tor">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <!-- Status 5: ออก PR Manual แล้ว -->
+                            <div class="tracking-metric-card metric-pr" title="คลิกเพื่อกรองสถานะนี้">
+                                <div class="tracking-metric-icon">⚡</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">5. ออก PR Manual แล้ว</span>
+                                    <div class="tracking-metric-val"><span id="val-status-pr">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <!-- Status 6: ส่งส่วนพัสดุเรียบร้อย (เกิน 3 แสน) -->
+                            <div class="tracking-metric-card metric-sent" title="คลิกเพื่อกรองสถานะนี้">
+                                <div class="tracking-metric-icon">📦</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">6. ส่งส่วนพัสดุ (&gt; 3 แสน)</span>
+                                    <div class="tracking-metric-val"><span id="val-status-sent">0</span> <small>รายการ</small></div>
+                                </div>
+                            </div>
+
+                            <!-- Status 7: ศคว. ดำเนินการจัดซื้อเอง (ไม่เกิน 3 แสน) -->
+                            <div class="tracking-metric-card metric-self" title="คลิกเพื่อกรองสถานะนี้">
+                                <div class="tracking-metric-icon">🏢</div>
+                                <div class="tracking-metric-info">
+                                    <span class="tracking-metric-label">7. ศคว. จัดซื้อเอง (≤ 3 แสน)</span>
+                                    <div class="tracking-metric-val"><span id="val-status-self">0</span> <small>รายการ</small></div>
                                 </div>
                             </div>
                         </div>
@@ -265,12 +296,13 @@
                             </div>
                             <div class="tracking-filter-chips" id="tracking-filter-chips">
                                 <button class="chip active" data-status-filter="">ทั้งหมด</button>
-                                <button class="chip" data-status-filter="done">ส่งพัสดุ / ศคว. จัดซื้อเอง</button>
-                                <button class="chip" data-status-filter="pr">ออก PR Manual</button>
-                                <button class="chip" data-status-filter="tor">ขออนุมัติ TOR/ราคากลาง</button>
-                                <button class="chip" data-status-filter="spec">ร่าง Spec/สืบราคา</button>
-                                <button class="chip" data-status-filter="committee">แต่งตั้ง กก.</button>
                                 <button class="chip" data-status-filter="pending">รอดำเนินการ</button>
+                                <button class="chip" data-status-filter="committee">แต่งตั้ง กก.</button>
+                                <button class="chip" data-status-filter="spec">ร่าง Spec/สืบราคา</button>
+                                <button class="chip" data-status-filter="tor">ขออนุมัติ TOR/ราคากลาง</button>
+                                <button class="chip" data-status-filter="pr">ออก PR Manual</button>
+                                <button class="chip" data-status-filter="sent">ส่งส่วนพัสดุ</button>
+                                <button class="chip" data-status-filter="self">ศคว. จัดซื้อเอง</button>
                             </div>
                         </div>
 
