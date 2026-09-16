@@ -25,6 +25,7 @@
         <nav class="header-nav">
             <a href="#" class="nav-link">หน้าหลัก</a>
             <a href="#timeline-section" class="nav-link">แผนการจัดซื้อจัดจ้าง</a>
+            <a href="#tracking-section" class="nav-link">ติดตามสถานะเอกสาร</a>
             <a href="#data-section" class="nav-link">ข้อมูลรายการครุภัณฑ์</a>
             <a href="forms.html" target="_blank" class="nav-link">แบบฟอร์มการจัดซื้อ</a>
         </nav>
@@ -151,6 +152,102 @@
 
         </section>
 
+        <!-- Tracking Section (กระดานติดตามสถานะการจัดทำเอกสาร) -->
+        <section class="tracking-section glass-panel" id="tracking-section">
+            <div class="section-header">
+                <h2><span>📋</span> กระดานติดตามสถานะการจัดทำเอกสาร</h2>
+            </div>
+
+            <!-- Overview Metrics -->
+            <div class="tracking-metrics-grid">
+                <div class="tracking-metric-card metric-sent">
+                    <div class="tracking-metric-icon">📦</div>
+                    <div class="tracking-metric-info">
+                        <span class="tracking-metric-label">ส่งส่วนพัสดุเรียบร้อย</span>
+                        <div class="tracking-metric-val"><span id="val-tracking-sent">0</span> <small>รายการ</small></div>
+                    </div>
+                </div>
+
+                <div class="tracking-metric-card metric-self">
+                    <div class="tracking-metric-icon">🏢</div>
+                    <div class="tracking-metric-info">
+                        <span class="tracking-metric-label">ศคว. ดำเนินการจัดซื้อเอง</span>
+                        <div class="tracking-metric-val"><span id="val-tracking-self">0</span> <small>รายการ</small></div>
+                    </div>
+                </div>
+
+                <div class="tracking-metric-card metric-inprogress">
+                    <div class="tracking-metric-icon">⚡</div>
+                    <div class="tracking-metric-info">
+                        <span class="tracking-metric-label">อยู่ระหว่างดำเนินการ</span>
+                        <div class="tracking-metric-val"><span id="val-tracking-inprogress">0</span> <small>รายการ</small></div>
+                    </div>
+                </div>
+
+                <div class="tracking-metric-card metric-pending">
+                    <div class="tracking-metric-icon">⏳</div>
+                    <div class="tracking-metric-info">
+                        <span class="tracking-metric-label">รอดำเนินการ (ยังไม่เริ่ม)</span>
+                        <div class="tracking-metric-val"><span id="val-tracking-pending">0</span> <small>รายการ</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar Box -->
+            <div class="tracking-progress-box">
+                <div class="progress-header">
+                    <div class="progress-title-wrap">
+                        <span class="progress-title">📊 ความคืบหน้าการจัดทำเอกสารภาพรวม</span>
+                        <span class="progress-sub-info" id="tracking-progress-detail">(คำนวณจากรายการที่ไม่ใช่สถานะ 'รอดำเนินการ')</span>
+                    </div>
+                    <span class="progress-percent" id="tracking-progress-percent">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="tracking-progress-fill" style="width: 0%;"></div>
+                </div>
+                <div class="progress-footer">
+                    <span id="tracking-progress-subtext">เริ่มดำเนินการแล้ว 0 จากทั้งหมด 0 รายการ (0%)</span>
+                    <span id="tracking-progress-completed-rate">เป้าหมาย: ดำเนินการให้แล้วเสร็จตามแผนงาน</span>
+                </div>
+            </div>
+
+            <!-- Tracking Toolbar -->
+            <div class="tracking-toolbar">
+                <div class="tracking-search-wrap">
+                    <span class="tracking-search-icon">🔍</span>
+                    <input type="text" class="tracking-search-input" id="tracking-search-input" placeholder="ค้นหาในกระดานติดตามสถานะ (ชื่อครุภัณฑ์, ผู้รับผิดชอบ Spec, สถานะเอกสาร)...">
+                </div>
+                <div class="tracking-filter-chips" id="tracking-filter-chips">
+                    <button class="chip active" data-status-filter="">ทั้งหมด</button>
+                    <button class="chip" data-status-filter="done">ส่งพัสดุ / ศคว. จัดซื้อเอง</button>
+                    <button class="chip" data-status-filter="pr">ออก PR Manual</button>
+                    <button class="chip" data-status-filter="tor">ขออนุมัติ TOR/ราคากลาง</button>
+                    <button class="chip" data-status-filter="spec">ร่าง Spec/สืบราคา</button>
+                    <button class="chip" data-status-filter="committee">แต่งตั้ง กก.</button>
+                    <button class="chip" data-status-filter="pending">รอดำเนินการ</button>
+                </div>
+            </div>
+
+            <!-- Tracking Table -->
+            <div class="table-wrapper tracking-table-wrapper">
+                <table class="tracking-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 80px;">ลำดับ</th>
+                            <th class="text-center" style="width: 140px;">ประเภทงบ</th>
+                            <th>ชื่อรายการครุภัณฑ์</th>
+                            <th style="width: 220px;">ผู้รับผิดชอบ Spec</th>
+                            <th class="text-center" style="width: 240px;">สถานะการทำเอกสาร</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tracking-table-body">
+                        <!-- Will be dynamically populated by app.js -->
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
         <!-- Data Grid & Explorer Section -->
         <section class="data-section glass-panel" id="data-section">
             
@@ -231,7 +328,10 @@
             <button class="modal-close" id="modal-close-btn">&times;</button>
             
             <div class="modal-title-area">
-                <span class="badge" id="modal-badge-type">วิทยาศาสตร์สุขภาพ</span>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
+                    <span class="badge" id="modal-badge-type">วิทยาศาสตร์สุขภาพ</span>
+                    <span class="badge badge-status-pending" id="modal-badge-status">รอดำเนินการ (ยังไม่เริ่ม)</span>
+                </div>
                 <h3 id="modal-item-name">เครื่องถ่ายและวิเคราะห์ภาพเจล (Gel documentation system)</h3>
             </div>
 
@@ -272,6 +372,10 @@
                 <div class="info-item">
                     <div class="info-label">สถานะของครุภัณฑ์เดิม</div>
                     <div class="info-value" id="modal-existing-status">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">สถานะการจัดทำเอกสาร</div>
+                    <div class="info-value" id="modal-doc-status" style="font-weight: 700; color: var(--primary);">รอดำเนินการ (ยังไม่เริ่ม)</div>
                 </div>
             </div>
 

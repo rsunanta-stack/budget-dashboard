@@ -81,7 +81,21 @@ document.addEventListener("DOMContentLoaded", () => {
         modalExistingStatus: document.getElementById("modal-existing-status"),
         modalNeedDetail: document.getElementById("modal-need-detail"),
         modalQuotesGrid: document.getElementById("modal-quotes-grid"),
-        modalBtnPdf: document.getElementById("modal-btn-pdf")
+        modalBtnPdf: document.getElementById("modal-btn-pdf"),
+        modalBadgeStatus: document.getElementById("modal-badge-status"),
+        modalDocStatus: document.getElementById("modal-doc-status"),
+        
+        valTrackingSent: document.getElementById("val-tracking-sent"),
+        valTrackingSelf: document.getElementById("val-tracking-self"),
+        valTrackingInprogress: document.getElementById("val-tracking-inprogress"),
+        valTrackingPending: document.getElementById("val-tracking-pending"),
+        
+        trackingProgressPercent: document.getElementById("tracking-progress-percent"),
+        trackingProgressFill: document.getElementById("tracking-progress-fill"),
+        trackingProgressSubtext: document.getElementById("tracking-progress-subtext"),
+        trackingTableBody: document.getElementById("tracking-table-body"),
+        trackingSearchInput: document.getElementById("tracking-search-input"),
+        trackingFilterChips: document.getElementById("tracking-filter-chips")
     };
 
     const TODAY = new Date();
@@ -550,6 +564,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function getDocStatusBadge(status) {
+        const s = (status || '').trim();
+        if (!s || s.includes('รอดำเนินการ')) {
+            return {
+                className: 'badge-status-pending',
+                label: s || 'รอดำเนินการ (ยังไม่เริ่ม)'
+            };
+        }
+        if (s.includes('แต่งตั้งคณะกรรมการ') || s.includes('คำสั่งแต่งตั้ง')) {
+            return {
+                className: 'badge-status-committee',
+                label: s
+            };
+        }
+        if (s.includes('ร่าง Spec') || s.includes('สืบราคา')) {
+            return {
+                className: 'badge-status-spec',
+                label: s
+            };
+        }
+        if (s.includes('TOR') || s.includes('ราคากลาง')) {
+            return {
+                className: 'badge-status-tor',
+                label: s
+            };
+        }
+        if (s.includes('PR Manual') || s.includes('ออก PR')) {
+            return {
+                className: 'badge-status-pr',
+                label: s
+            };
+        }
+        if (s.includes('ส่งส่วนพัสดุ') || s.includes('จัดซื้อเอง') || s.includes('เรียบร้อย')) {
+            return {
+                className: 'badge-status-done',
+                label: s
+            };
+        }
+        return {
+            className: 'badge-status-default',
+            label: s
+        };
+    }
+
     function showDetailModal(itemId) {
         let item = state.items.find(i => i.id === itemId);
         
@@ -581,6 +639,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (elements.modalBadgeType) {
             elements.modalBadgeType.className = isTech ? 'badge badge-tech' : 'badge badge-health';
             elements.modalBadgeType.textContent = isTech ? 'วิทยาศาสตร์และเทคโนโลยี' : 'วิทยาศาสตร์สุขภาพ';
+        }
+
+        const badgeStatus = getDocStatusBadge(item.docStatus);
+        if (elements.modalBadgeStatus) {
+            elements.modalBadgeStatus.className = `badge ${badgeStatus.className}`;
+            elements.modalBadgeStatus.textContent = badgeStatus.label;
+        }
+        if (elements.modalDocStatus) {
+            elements.modalDocStatus.textContent = item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)';
         }
 
         const quotes = [];
@@ -712,7 +779,8 @@ document.addEventListener("DOMContentLoaded", () => {
             department: 21,
             image: 22,
             faculty: 23,
-            pdfLink: 24
+            pdfLink: 24,
+            docStatus: isTech ? 26 : 25
         });
 
         for (let r = startIndex; r < rows.length; r++) {
@@ -764,6 +832,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const image = cleanText(cells[22]);
             const faculty = cleanText(cells[23]);
             const pdfLink = cleanText(cells[24]);
+            
+            // Tab 1: 'วิทย์เทค(แบบแยก)' uses column AA (index 26)
+            // Tab 2: 'วิทย์สุข(แบบแยก)' uses column Z (index 25)
+            const docStatusCell = isTech ? cells[26] : cells[25];
+            const docStatusRaw = cleanText(docStatusCell);
+            const docStatus = docStatusRaw || 'รอดำเนินการ (ยังไม่เริ่ม)';
 
             const isParent = priority !== "" && !isNaN(parseFloat(priority)) && isFinite(priority);
 
@@ -797,11 +871,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     image: image,
                     faculty: faculty,
                     pdfLink: pdfLink,
+                    docStatus: docStatus,
                     children: []
                 };
 
                 if (items.length < 2) {
-                    console.log(`[Google Sheets Parse] Mapped Row ${r+1} -> Parent Name: "${parentObj.name}", Qty: ${parentObj.quantity}, Price: ${parentObj.totalPrice} Baht`);
+                    console.log(`[Google Sheets Parse] Mapped Row ${r+1} -> Parent Name: "${parentObj.name}", Qty: ${parentObj.quantity}, Price: ${parentObj.totalPrice} Baht, DocStatus: "${parentObj.docStatus}"`);
                 }
 
                 currentParent = parentObj;
@@ -844,11 +919,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         department: department,
                         image: image,
                         faculty: faculty,
-                        pdfLink: pdfLink
+                        pdfLink: pdfLink,
+                        docStatus: docStatus || (currentParent ? currentParent.docStatus : 'รอดำเนินการ (ยังไม่เริ่ม)')
                     };
                     
                     if (currentParent.children.length < 2) {
-                        console.log(`[Google Sheets Parse] Mapped Row ${r+1} -> Child Name: "${childObj.name}", Qty: ${childObj.quantity}, Price: ${childObj.totalPrice} Baht`);
+                        console.log(`[Google Sheets Parse] Mapped Row ${r+1} -> Child Name: "${childObj.name}", Qty: ${childObj.quantity}, Price: ${childObj.totalPrice} Baht, DocStatus: "${childObj.docStatus}"`);
                     }
 
                     currentParent.children.push(childObj);
@@ -903,15 +979,214 @@ document.addEventListener("DOMContentLoaded", () => {
         updateKPIs();
         initFilterOptions();
         renderTable();
+        renderTracking();
     }
 
     function loadLocalFallback() {
         const rawTech = BUDGET_DATA.science_tech || [];
         const rawHealth = BUDGET_DATA.science_health || [];
         state.items = [
-            ...rawTech.map(item => ({ ...item, category_th: "วิทยาศาสตร์และเทคโนโลยี" })),
-            ...rawHealth.map(item => ({ ...item, category_th: "วิทยาศาสตร์สุขภาพ" }))
+            ...rawTech.map(item => ({ ...item, category_th: "วิทยาศาสตร์และเทคโนโลยี", docStatus: item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)' })),
+            ...rawHealth.map(item => ({ ...item, category_th: "วิทยาศาสตร์สุขภาพ", docStatus: item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)' }))
         ];
+    }
+
+    let trackingActiveFilter = '';
+    let trackingSearchQuery = '';
+
+    function renderTracking() {
+        const tbody = elements.trackingTableBody || document.getElementById("tracking-table-body");
+        if (!tbody) return;
+
+        // 1. Calculate Metrics & Progress
+        const totalItems = state.items.length;
+        let sentCount = 0;
+        let selfCount = 0;
+        let inProgressCount = 0;
+        let pendingCount = 0;
+        let startedCount = 0;
+
+        state.items.forEach(item => {
+            const status = item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)';
+            const isPending = !status || status.includes('รอดำเนินการ');
+            
+            if (status.includes('ส่งส่วนพัสดุเรียบร้อย')) {
+                sentCount++;
+                startedCount++;
+            } else if (status.includes('ศคว. ดำเนินการจัดซื้อเอง')) {
+                selfCount++;
+                startedCount++;
+            } else if (isPending) {
+                pendingCount++;
+            } else {
+                inProgressCount++;
+                startedCount++;
+            }
+        });
+
+        const percent = totalItems > 0 ? ((startedCount / totalItems) * 100).toFixed(1) : "0.0";
+
+        // Update DOM Metrics
+        if (elements.valTrackingSent) elements.valTrackingSent.textContent = formatNumber(sentCount);
+        if (elements.valTrackingSelf) elements.valTrackingSelf.textContent = formatNumber(selfCount);
+        if (elements.valTrackingInprogress) elements.valTrackingInprogress.textContent = formatNumber(inProgressCount);
+        if (elements.valTrackingPending) elements.valTrackingPending.textContent = formatNumber(pendingCount);
+
+        // Update Progress Bar
+        if (elements.trackingProgressPercent) elements.trackingProgressPercent.textContent = `${percent}%`;
+        if (elements.trackingProgressFill) elements.trackingProgressFill.style.width = `${percent}%`;
+        if (elements.trackingProgressSubtext) {
+            elements.trackingProgressSubtext.textContent = `เริ่มดำเนินการแล้ว ${formatNumber(startedCount)} จากทั้งหมด ${formatNumber(totalItems)} รายการ (${percent}%)`;
+        }
+
+        // 2. Filter & Render Tracking Table Rows
+        tbody.innerHTML = '';
+
+        const filterQuery = (trackingSearchQuery || '').toLowerCase().trim();
+
+        const filteredRows = state.items.filter(item => {
+            const itemStatus = (item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)').toLowerCase();
+            const itemName = (item.name || '').toLowerCase();
+            const itemSpec = (item.specMaker || '').toLowerCase();
+            const itemPriority = (item.priority || '').toString();
+
+            // Search text matching
+            const matchesSearch = !filterQuery || 
+                itemName.includes(filterQuery) || 
+                itemSpec.includes(filterQuery) || 
+                itemStatus.includes(filterQuery) || 
+                itemPriority.includes(filterQuery);
+
+            if (!matchesSearch) return false;
+
+            // Status chip filter matching
+            if (!trackingActiveFilter) return true;
+            if (trackingActiveFilter === 'done') {
+                return itemStatus.includes('ส่งส่วนพัสดุ') || itemStatus.includes('จัดซื้อเอง') || itemStatus.includes('เรียบร้อย');
+            }
+            if (trackingActiveFilter === 'pr') {
+                return itemStatus.includes('pr') || itemStatus.includes('ออก pr');
+            }
+            if (trackingActiveFilter === 'tor') {
+                return itemStatus.includes('tor') || itemStatus.includes('ราคากลาง');
+            }
+            if (trackingActiveFilter === 'spec') {
+                return itemStatus.includes('spec') || itemStatus.includes('สืบราคา');
+            }
+            if (trackingActiveFilter === 'committee') {
+                return itemStatus.includes('แต่งตั้ง') || itemStatus.includes('คณะกรรมการ');
+            }
+            if (trackingActiveFilter === 'pending') {
+                return itemStatus.includes('รอดำเนินการ');
+            }
+            return true;
+        });
+
+        if (filteredRows.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center" style="padding: 35px; color: var(--text-secondary);">
+                        ❌ ไม่พบรายการติดตามเอกสารที่ตรงกับเงื่อนไข
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        filteredRows.forEach(item => {
+            const row = document.createElement("tr");
+            row.className = "table-row-parent table-row-item";
+            row.dataset.id = item.id;
+
+            const isTech = item.type === 'science_tech';
+            const badgeTypeClass = isTech ? 'badge-tech' : 'badge-health';
+            const badgeTypeLabel = isTech ? 'วิทย์-เทค' : 'วิทย์-สุข';
+            const badgeStatus = getDocStatusBadge(item.docStatus);
+
+            const hasChildren = item.children && item.children.length > 0;
+
+            row.innerHTML = `
+                <td class="text-center" style="font-weight:700; color:var(--text-secondary);">${item.priority || "-"}</td>
+                <td class="text-center"><span class="badge ${badgeTypeClass}">${badgeTypeLabel}</span></td>
+                <td class="parent-name-cell" style="line-height:1.5;">
+                    ${hasChildren ? `
+                        <span class="toggle-trigger">
+                            <span class="toggle-icon">▶</span>
+                        </span>
+                    ` : ''}
+                    <span>${item.name}</span>
+                </td>
+                <td>${item.specMaker || "-"}</td>
+                <td class="text-center"><span class="badge ${badgeStatus.className}">${badgeStatus.label}</span></td>
+            `;
+
+            if (hasChildren) {
+                const toggleTrigger = row.querySelector(".toggle-trigger");
+                if (toggleTrigger) {
+                    toggleTrigger.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        const childRows = tbody.querySelectorAll(`.tracking-child-of-${item.id}`);
+                        const toggleIcon = row.querySelector(".toggle-icon");
+                        if (toggleIcon) {
+                            const isOpen = toggleIcon.classList.contains("open");
+                            if (isOpen) {
+                                toggleIcon.classList.remove("open");
+                                childRows.forEach(r => r.style.display = "none");
+                            } else {
+                                toggleIcon.classList.add("open");
+                                childRows.forEach(r => r.style.display = "table-row");
+                            }
+                        }
+                    });
+                }
+            }
+
+            row.addEventListener("click", () => showDetailModal(item.id));
+            tbody.appendChild(row);
+
+            if (hasChildren) {
+                item.children.forEach((child, childIdx) => {
+                    const childBadgeStatus = getDocStatusBadge(child.docStatus || item.docStatus);
+                    const childRow = document.createElement("tr");
+                    childRow.className = `table-row-child table-row-item tracking-child-of-${item.id}`;
+                    childRow.style.display = "none";
+                    childRow.dataset.id = child.id;
+                    childRow.innerHTML = `
+                        <td class="text-center" style="font-weight:600; color:var(--text-secondary); opacity: 0.85;">${item.priority}.${childIdx + 1}</td>
+                        <td class="text-center"><span class="badge ${badgeTypeClass}" style="opacity: 0.75;">${badgeTypeLabel}</span></td>
+                        <td style="padding-left: 28px; font-weight:500;">
+                            <span style="opacity: 0.4; margin-right: 6px;">└─</span>
+                            ${child.name}
+                        </td>
+                        <td style="opacity: 0.9;">${child.specMaker || item.specMaker || "-"}</td>
+                        <td class="text-center"><span class="badge ${childBadgeStatus.className}">${childBadgeStatus.label}</span></td>
+                    `;
+                    childRow.addEventListener("click", () => showDetailModal(child.id));
+                    tbody.appendChild(childRow);
+                });
+            }
+        });
+    }
+
+    function initTrackingListeners() {
+        if (elements.trackingSearchInput) {
+            elements.trackingSearchInput.addEventListener("input", (e) => {
+                trackingSearchQuery = e.target.value;
+                renderTracking();
+            });
+        }
+
+        if (elements.trackingFilterChips) {
+            const chips = elements.trackingFilterChips.querySelectorAll(".chip");
+            chips.forEach(chip => {
+                chip.addEventListener("click", () => {
+                    chips.forEach(c => c.classList.remove("active"));
+                    chip.classList.add("active");
+                    trackingActiveFilter = chip.dataset.statusFilter || '';
+                    renderTracking();
+                });
+            });
+        }
     }
 
     if (elements.themeToggle) {
@@ -1008,6 +1283,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initDateHeader();
     initTimeline();
+    initTrackingListeners();
     loadDataset();
 });
 
