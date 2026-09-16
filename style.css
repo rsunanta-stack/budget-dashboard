@@ -45,9 +45,12 @@
     --tr-child-hover: #f1f5f9;
 
     /* Solid Metric Card Gradients */
-    --metric-blue: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
-    --metric-cyan: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
-    --metric-orange: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    --metric-blue: linear-gradient(135deg, #3730a3 0%, #4f46e5 100%);
+    --metric-indigo: linear-gradient(135deg, #3730a3 0%, #4f46e5 100%);
+    --metric-cyan: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+    --metric-teal: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+    --metric-orange: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+    --metric-amber: linear-gradient(135deg, #b45309 0%, #d97706 100%);
     --metric-red: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
 }
 
@@ -90,10 +93,13 @@
     --tr-child-hover: rgba(16, 185, 129, 0.08);
 
     /* Solid Metric Card Gradients in Dark Mode */
-    --metric-blue: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-    --metric-cyan: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
-    --metric-orange: linear-gradient(135deg, #b45309 0%, #d97706 100%);
-    --metric-red: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
+    --metric-blue: linear-gradient(135deg, #312e81 0%, #4f46e5 100%);
+    --metric-indigo: linear-gradient(135deg, #312e81 0%, #4f46e5 100%);
+    --metric-cyan: linear-gradient(135deg, #134e4a 0%, #0d9488 100%);
+    --metric-teal: linear-gradient(135deg, #134e4a 0%, #0d9488 100%);
+    --metric-orange: linear-gradient(135deg, #78350f 0%, #d97706 100%);
+    --metric-amber: linear-gradient(135deg, #78350f 0%, #d97706 100%);
+    --metric-red: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%);
 }
 
 /* ==========================================================================
@@ -497,19 +503,23 @@ body.dark-theme .admin-card:hover {
 }
 
 /* Solid Color Variations */
-.card-solid-blue {
-    background: var(--metric-blue);
+.card-solid-blue, .card-solid-indigo {
+    background: #4f46e5;
+    background: var(--metric-indigo);
 }
 
-.card-solid-cyan {
-    background: var(--metric-cyan);
+.card-solid-cyan, .card-solid-teal {
+    background: #0d9488;
+    background: var(--metric-teal);
 }
 
-.card-solid-orange {
+.card-solid-orange, .card-solid-amber {
+    background: #d97706;
     background: var(--metric-orange);
 }
 
 .card-solid-red {
+    background: #dc2626;
     background: var(--metric-red);
 }
 

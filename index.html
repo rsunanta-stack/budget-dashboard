@@ -146,8 +146,8 @@
                         <!-- Metrics Overview Section (Solid Colors) -->
                         <div class="metrics-grid" id="metrics-overview">
                             
-                            <!-- Metric 1: Blue Solid -->
-                            <div class="metric-card card-solid-blue">
+                            <!-- Metric 1: Indigo/Deep Blue Solid (#4f46e5) -->
+                            <div class="metric-card card-solid-indigo">
                                 <div class="metric-header">
                                     <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
                                     <div class="metric-icon">🔬</div>
@@ -156,8 +156,8 @@
                                 <div class="metric-subtext" id="val-tech-count">0 รายการ</div>
                             </div>
 
-                            <!-- Metric 2: Cyan Solid -->
-                            <div class="metric-card card-solid-cyan">
+                            <!-- Metric 2: Teal Solid (#0d9488) -->
+                            <div class="metric-card card-solid-teal">
                                 <div class="metric-header">
                                     <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
                                     <div class="metric-icon">🏥</div>
@@ -166,7 +166,7 @@
                                 <div class="metric-subtext" id="val-health-count">0 รายการ</div>
                             </div>
 
-                            <!-- Metric 3: Amber/Orange Solid -->
+                            <!-- Metric 3: Amber/Orange Solid (#d97706) -->
                             <div class="metric-card card-solid-orange">
                                 <div class="metric-header">
                                     <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
@@ -189,7 +189,7 @@
                             </div>
 
                             <div class="admin-card chart-card">
-                                <h3 class="chart-title">งบประมาณรวมสูงสุด 5 อันดับแรกแยกตามหน่วยงาน/สำนักวิชา</h3>
+                                <h3 class="chart-title">งบประมาณรวมแยกตามหน่วยงาน/สำนักวิชา</h3>
                                 <div class="chart-wrapper">
                                     <canvas id="chart-schools"></canvas>
                                 </div>
@@ -204,67 +204,59 @@
                             <h2><span>📋</span> กระดานติดตามสถานะการจัดทำเอกสาร</h2>
                         </div>
 
-                        <!-- 7 Tracking Status Metric Cards -->
+                        <!-- Tracking Status Metric Cards -->
                         <div class="tracking-metrics-grid">
-                            <!-- Status 1: รอดำเนินการ (ยังไม่เริ่ม) -->
-                            <div class="tracking-metric-card metric-pending" title="คลิกเพื่อกรองสถานะนี้">
-                                <div class="tracking-metric-icon">⏳</div>
-                                <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">1. รอดำเนินการ (ยังไม่เริ่ม)</span>
-                                    <div class="tracking-metric-val"><span id="val-status-pending">0</span> <small>รายการ</small></div>
-                                </div>
-                            </div>
 
-                            <!-- Status 2: จัดทำคำสั่งแต่งตั้งคณะกรรมการ -->
+                            <!-- Status 1: จัดทำคำสั่งแต่งตั้งคณะกรรมการ -->
                             <div class="tracking-metric-card metric-committee" title="คลิกเพื่อกรองสถานะนี้">
                                 <div class="tracking-metric-icon">📜</div>
                                 <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">2. แต่งตั้งคณะกรรมการ</span>
+                                    <span class="tracking-metric-label">1. แต่งตั้งคณะกรรมการ</span>
                                     <div class="tracking-metric-val"><span id="val-status-committee">0</span> <small>รายการ</small></div>
                                 </div>
                             </div>
 
-                            <!-- Status 3: อยู่ระหว่างจัดทำร่าง Spec / สืบราคา -->
+                            <!-- Status 2: อยู่ระหว่างจัดทำร่าง Spec / สืบราคา -->
                             <div class="tracking-metric-card metric-spec" title="คลิกเพื่อกรองสถานะนี้">
                                 <div class="tracking-metric-icon">📝</div>
                                 <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">3. ร่าง Spec / สืบราคา</span>
+                                    <span class="tracking-metric-label">2. ร่าง Spec / สืบราคา</span>
                                     <div class="tracking-metric-val"><span id="val-status-spec">0</span> <small>รายการ</small></div>
                                 </div>
                             </div>
 
-                            <!-- Status 4: เสนอขออนุมัติ TOR และราคากลาง -->
+                            <!-- Status 3: เสนอขออนุมัติ TOR และราคากลาง -->
                             <div class="tracking-metric-card metric-tor" title="คลิกเพื่อกรองสถานะนี้">
                                 <div class="tracking-metric-icon">📑</div>
                                 <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">4. ขออนุมัติ TOR/ราคากลาง</span>
+                                    <span class="tracking-metric-label">3. ขออนุมัติ TOR/ราคากลาง</span>
                                     <div class="tracking-metric-val"><span id="val-status-tor">0</span> <small>รายการ</small></div>
                                 </div>
                             </div>
 
-                            <!-- Status 5: ออก PR Manual แล้ว -->
+                            <!-- Status 4: ออก PR Manual แล้ว -->
                             <div class="tracking-metric-card metric-pr" title="คลิกเพื่อกรองสถานะนี้">
                                 <div class="tracking-metric-icon">⚡</div>
                                 <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">5. ออก PR Manual แล้ว</span>
+                                    <span class="tracking-metric-label">4. ออก PR Manual แล้ว</span>
                                     <div class="tracking-metric-val"><span id="val-status-pr">0</span> <small>รายการ</small></div>
                                 </div>
                             </div>
 
-                            <!-- Status 6: ส่งส่วนพัสดุเรียบร้อย (เกิน 3 แสน) -->
+                            <!-- Status 5: ส่งส่วนพัสดุเรียบร้อย (เกิน 3 แสน) -->
                             <div class="tracking-metric-card metric-sent" title="คลิกเพื่อกรองสถานะนี้">
                                 <div class="tracking-metric-icon">📦</div>
                                 <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">6. ส่งส่วนพัสดุ (&gt; 3 แสน)</span>
+                                    <span class="tracking-metric-label">5. ส่งส่วนพัสดุ (&gt; 3 แสน)</span>
                                     <div class="tracking-metric-val"><span id="val-status-sent">0</span> <small>รายการ</small></div>
                                 </div>
                             </div>
 
-                            <!-- Status 7: ศคว. ดำเนินการจัดซื้อเอง (ไม่เกิน 3 แสน) -->
+                            <!-- Status 6: ศคว. ดำเนินการจัดซื้อเอง (ไม่เกิน 3 แสน) -->
                             <div class="tracking-metric-card metric-self" title="คลิกเพื่อกรองสถานะนี้">
                                 <div class="tracking-metric-icon">🏢</div>
                                 <div class="tracking-metric-info">
-                                    <span class="tracking-metric-label">7. ศคว. จัดซื้อเอง (≤ 3 แสน)</span>
+                                    <span class="tracking-metric-label">6. ศคว. จัดซื้อเอง (≤ 3 แสน)</span>
                                     <div class="tracking-metric-val"><span id="val-status-self">0</span> <small>รายการ</small></div>
                                 </div>
                             </div>

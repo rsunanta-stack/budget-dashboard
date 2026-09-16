@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
         modalBadgeStatus: document.getElementById("modal-badge-status"),
         modalDocStatus: document.getElementById("modal-doc-status"),
         
-        valStatusPending: document.getElementById("val-status-pending"),
         valStatusCommittee: document.getElementById("val-status-committee"),
         valStatusSpec: document.getElementById("val-status-spec"),
         valStatusTor: document.getElementById("val-status-tor"),
@@ -285,9 +284,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     labels: ['วิทยาศาสตร์และเทคโนโลยี', 'วิทยาศาสตร์สุขภาพ'],
                     datasets: [{
                         data: [techSum, healthSum],
-                        backgroundColor: isDark ? ['#10b981', '#0ea5e9'] : ['#2563eb', '#0284c7'],
+                        backgroundColor: isDark ? ['#6366f1', '#14b8a6'] : ['#4f46e5', '#0d9488'],
                         borderWidth: 2,
-                        borderColor: isDark ? '#151d2e' : '#ffffff'
+                        borderColor: isDark ? '#151d2e' : '#ffffff',
+                        hoverOffset: 6
                     }]
                 },
                 options: {
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: textColor, font: { family: 'Sarabun', size: 12 } }
+                            labels: { color: textColor, font: { family: 'Sarabun', size: 12 }, padding: 16 }
                         },
                         tooltip: {
                             callbacks: {
@@ -323,10 +323,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        // Display all agencies/schools without slicing top 5
         const sortedSchools = Object.keys(schoolBudgets)
             .map(key => ({ name: key, budget: schoolBudgets[key] }))
-            .sort((a, b) => b.budget - a.budget)
-            .slice(0, 5);
+            .sort((a, b) => b.budget - a.budget);
+
+        // Vibrant Multi-color Palette for Bar Chart
+        const multiColorPalette = [
+            '#4f46e5', // Indigo
+            '#0d9488', // Teal
+            '#d97706', // Amber / Orange
+            '#2563eb', // Royal Blue
+            '#ec4899', // Pink
+            '#8b5cf6', // Violet
+            '#06b6d4', // Cyan
+            '#10b981', // Emerald
+            '#f97316', // Orange
+            '#ef4444', // Red
+            '#6366f1', // Indigo Accent
+            '#14b8a6', // Teal Light
+            '#f59e0b', // Amber Light
+            '#3b82f6', // Sky Blue
+            '#a855f7', // Purple
+            '#84cc16', // Lime
+            '#0284c7', // Ocean Blue
+            '#e11d48', // Rose
+            '#64748b'  // Slate
+        ];
+
+        const barColors = sortedSchools.map((_, idx) => multiColorPalette[idx % multiColorPalette.length]);
 
         const schoolsCanvas = document.getElementById("chart-schools");
         if (schoolsCanvas) {
@@ -338,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     datasets: [{
                         label: 'งบประมาณรวม (บาท)',
                         data: sortedSchools.map(s => s.budget),
-                        backgroundColor: isDark ? '#10b981' : '#2563eb',
+                        backgroundColor: barColors,
                         borderRadius: 6
                     }]
                 },
@@ -1061,8 +1086,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const percent = totalItems > 0 ? ((startedCount / totalItems) * 100).toFixed(1) : "0.0";
 
-        // Update DOM Metrics for all 7 statuses
-        if (elements.valStatusPending) elements.valStatusPending.textContent = formatNumber(countPending);
+        // Update DOM Metrics for active tracking statuses
         if (elements.valStatusCommittee) elements.valStatusCommittee.textContent = formatNumber(countCommittee);
         if (elements.valStatusSpec) elements.valStatusSpec.textContent = formatNumber(countSpec);
         if (elements.valStatusTor) elements.valStatusTor.textContent = formatNumber(countTor);
@@ -1231,7 +1255,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Allow clicking metric cards to filter table directly
         const metricCardMap = [
-            { selector: '.tracking-metric-card.metric-pending', filter: 'pending' },
             { selector: '.tracking-metric-card.metric-committee', filter: 'committee' },
             { selector: '.tracking-metric-card.metric-spec', filter: 'spec' },
             { selector: '.tracking-metric-card.metric-tor', filter: 'tor' },
