@@ -101,9 +101,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         themeIcon: document.getElementById("theme-icon"),
         themeLabel: document.getElementById("theme-label"),
-        sidebarToggle: document.getElementById("sidebar-toggle"),
+        sidebarToggle: document.getElementById("sidebar-toggle") || document.getElementById("hamburger-btn"),
+        hamburgerBtn: document.getElementById("hamburger-btn") || document.getElementById("sidebar-toggle"),
+        sidebarCollapseBtn: document.getElementById("sidebar-collapse-btn"),
+        appRoot: document.getElementById("app-root") || document.querySelector(".app"),
         appSidebar: document.getElementById("app-sidebar"),
-        sidebarOverlay: document.getElementById("sidebar-overlay"),
+        sidebarOverlay: document.getElementById("sidebar-overlay") || document.getElementById("scrim"),
+        scrim: document.getElementById("scrim") || document.getElementById("sidebar-overlay"),
 
         overviewSection: document.getElementById("overview-section"),
         trackingSection: document.getElementById("tracking-section"),
@@ -1373,18 +1377,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function switchTab(tabId) {
         const targetId = tabId || 'overview-section';
 
-        // 1. Hide all SPA sections
-        SECTION_IDS.forEach(id => {
-            const sec = document.getElementById(id);
-            if (sec) {
-                sec.style.display = 'none';
-            }
+        // 1. Hide all SPA sections by removing .active class and resetting inline display
+        const allPages = document.querySelectorAll('.page, .spa-section');
+        allPages.forEach(sec => {
+            sec.classList.remove('active');
+            sec.style.display = '';
         });
 
-        // 2. Show the active section
+        // 2. Show the active section with .active class to trigger fade-in animation
         const activeSection = document.getElementById(targetId);
         if (activeSection) {
-            activeSection.style.display = targetId === 'overview-section' ? 'flex' : 'block';
+            activeSection.classList.add('active');
+            activeSection.style.display = '';
         }
 
         // 3. Update topbar title & breadcrumb
@@ -1421,22 +1425,61 @@ document.addEventListener("DOMContentLoaded", () => {
     window.switchTab = switchTab;
 
     function initSidebar() {
-        if (elements.sidebarToggle && elements.appSidebar) {
-            elements.sidebarToggle.addEventListener('click', () => {
+        // Restore desktop mini sidebar state from localStorage
+        const savedMini = localStorage.getItem('cse_wu_sidebar_mini');
+        if (savedMini === 'true' && elements.appRoot && window.innerWidth > 1080) {
+            elements.appRoot.classList.add('mini');
+        }
+
+        // 1. Desktop Mini Sidebar Toggle
+        if (elements.sidebarCollapseBtn && elements.appRoot) {
+            elements.sidebarCollapseBtn.addEventListener('click', () => {
+                const isMini = elements.appRoot.classList.toggle('mini');
+                localStorage.setItem('cse_wu_sidebar_mini', isMini ? 'true' : 'false');
+                
+                // Trigger chart resizing smoothly after transition
+                setTimeout(() => {
+                    if (state.charts.share) state.charts.share.resize();
+                    if (state.charts.schools) state.charts.schools.resize();
+                }, 350);
+            });
+        }
+
+        // 2. Mobile / Tablet Hamburger & Scrim Drawer Toggle
+        const toggleMobileDrawer = () => {
+            if (elements.appSidebar) {
+                elements.appSidebar.classList.toggle('open');
                 elements.appSidebar.classList.toggle('sidebar-open');
-                if (elements.sidebarOverlay) {
-                    elements.sidebarOverlay.classList.toggle('active');
-                }
-            });
+            }
+            if (elements.scrim) {
+                elements.scrim.classList.toggle('active');
+                elements.scrim.classList.toggle('open');
+            }
+        };
+
+        const closeMobileDrawer = () => {
+            if (elements.appSidebar) {
+                elements.appSidebar.classList.remove('open', 'sidebar-open');
+            }
+            if (elements.scrim) {
+                elements.scrim.classList.remove('active', 'open');
+            }
+        };
+
+        if (elements.hamburgerBtn) {
+            elements.hamburgerBtn.addEventListener('click', toggleMobileDrawer);
+        } else if (elements.sidebarToggle) {
+            elements.sidebarToggle.addEventListener('click', toggleMobileDrawer);
         }
 
-        if (elements.sidebarOverlay && elements.appSidebar) {
-            elements.sidebarOverlay.addEventListener('click', () => {
-                elements.appSidebar.classList.remove('sidebar-open');
-                elements.sidebarOverlay.classList.remove('active');
-            });
+        if (elements.scrim) {
+            elements.scrim.addEventListener('click', closeMobileDrawer);
+        }
+        if (elements.sidebarOverlay && elements.sidebarOverlay !== elements.scrim) {
+            elements.sidebarOverlay.addEventListener('click', closeMobileDrawer);
         }
 
+        // 3. Navigation link click handlers & Auto-close on mobile/tablet
         if (elements.appSidebar) {
             const links = elements.appSidebar.querySelectorAll('.sidebar-link');
             links.forEach(link => {
@@ -1445,9 +1488,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const tabId = link.dataset.tab || 'overview-section';
                     switchTab(tabId);
 
-                    if (window.innerWidth <= 992) {
-                        elements.appSidebar.classList.remove('sidebar-open');
-                        if (elements.sidebarOverlay) elements.sidebarOverlay.classList.remove('active');
+                    if (window.innerWidth <= 1080) {
+                        closeMobileDrawer();
                     }
                 });
             });
@@ -1536,6 +1578,134 @@ document.addEventListener("DOMContentLoaded", () => {
             state.currentPage = 1;
             renderTable();
         });
+    }
+
+    // ============================================================
+    // Excel Export Function (SheetJS)
+    // Exports CURRENTLY FILTERED data (respects search & filter)
+    // ============================================================
+    function exportToExcel() {
+        const btn = document.getElementById('btn-export-excel');
+        const originalHTML = btn ? btn.innerHTML : '';
+
+        // Visual loading feedback
+        if (btn) {
+            btn.innerHTML = '<span class="btn-excel-icon">⏳</span><span class="btn-excel-text">กำลังสร้างไฟล์...</span>';
+            btn.disabled = true;
+        }
+
+        try {
+            // Build flat export rows from the CURRENTLY FILTERED items
+            // (includes all pages, not just current page)
+            const exportRows = [];
+
+            state.filteredItems.forEach((item, idx) => {
+                const typeLabel = item.type === 'science_tech' ? 'วิทยาศาสตร์และเทคโนโลยี' : 'วิทยาศาสตร์สุขภาพ';
+
+                exportRows.push({
+                    'ลำดับ': item.priority || (idx + 1),
+                    'ประเภทงบ': typeLabel,
+                    'ชื่อรายการครุภัณฑ์': item.name || '',
+                    'หน่วยงาน/สำนักวิชา': item.faculty || '',
+                    'สาขาวิชา/ฝ่าย': item.department || '',
+                    'จำนวน': item.quantity || 0,
+                    'หน่วย': item.unit || '',
+                    'ราคาต่อหน่วย (บาท)': item.unitPrice || 0,
+                    'ราคารวม (บาท)': item.totalPrice || 0,
+                    'ผู้เสนอขอ': item.requester || '',
+                    'ผู้รับผิดชอบ Spec': item.specMaker || '',
+                    'สถานที่ติดตั้ง': item.location || '',
+                    'สถานะการจัดทำเอกสาร': item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)'
+                });
+
+                // Add child rows indented with prefix
+                if (item.filteredChildren && item.filteredChildren.length > 0) {
+                    item.filteredChildren.forEach((child, childIdx) => {
+                        const childTypeLabel = child.type === 'science_tech' ? 'วิทยาศาสตร์และเทคโนโลยี' : 'วิทยาศาสตร์สุขภาพ';
+                        exportRows.push({
+                            'ลำดับ': `${item.priority}.${childIdx + 1}`,
+                            'ประเภทงบ': childTypeLabel,
+                            'ชื่อรายการครุภัณฑ์': `  └─ ${child.name || ''}`,
+                            'หน่วยงาน/สำนักวิชา': child.faculty || item.faculty || '',
+                            'สาขาวิชา/ฝ่าย': child.department || '',
+                            'จำนวน': child.quantity || 0,
+                            'หน่วย': child.unit || '',
+                            'ราคาต่อหน่วย (บาท)': child.unitPrice || 0,
+                            'ราคารวม (บาท)': child.totalPrice || 0,
+                            'ผู้เสนอขอ': child.requester || '',
+                            'ผู้รับผิดชอบ Spec': child.specMaker || item.specMaker || '',
+                            'สถานที่ติดตั้ง': child.location || '',
+                            'สถานะการจัดทำเอกสาร': child.docStatus || item.docStatus || 'รอดำเนินการ (ยังไม่เริ่ม)'
+                        });
+                    });
+                }
+            });
+
+            if (exportRows.length === 0) {
+                alert('ไม่มีข้อมูลสำหรับดาวน์โหลด กรุณาตรวจสอบตัวกรองที่เลือกไว้');
+                return;
+            }
+
+            // Build worksheet & workbook
+            const worksheet = XLSX.utils.json_to_sheet(exportRows);
+
+            // Set column widths for readability
+            worksheet['!cols'] = [
+                { wch: 8 },   // ลำดับ
+                { wch: 26 },  // ประเภทงบ
+                { wch: 55 },  // ชื่อรายการ
+                { wch: 32 },  // หน่วยงาน
+                { wch: 22 },  // สาขาวิชา
+                { wch: 8 },   // จำนวน
+                { wch: 8 },   // หน่วย
+                { wch: 18 },  // ราคาต่อหน่วย
+                { wch: 18 },  // ราคารวม
+                { wch: 22 },  // ผู้เสนอขอ
+                { wch: 22 },  // ผู้รับผิดชอบ Spec
+                { wch: 30 },  // สถานที่
+                { wch: 36 }   // สถานะเอกสาร
+            ];
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'รายการครุภัณฑ์');
+
+            // Build filename with current date
+            const thaiDate = new Date().toLocaleDateString('th-TH', {
+                year: 'numeric', month: '2-digit', day: '2-digit'
+            }).replace(/\//g, '-');
+
+            const filterSuffix = (state.filters.type || state.filters.faculty || state.filters.search)
+                ? '_Filtered'
+                : '_All';
+
+            const filename = `Budget_Report_2570${filterSuffix}_${thaiDate}.xlsx`;
+
+            // Trigger download
+            XLSX.writeFile(workbook, filename);
+
+            // Success feedback on button
+            if (btn) {
+                btn.innerHTML = '<span class="btn-excel-icon">✅</span><span class="btn-excel-text">ดาวน์โหลดสำเร็จ!</span>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                }, 2000);
+            }
+
+        } catch (err) {
+            console.error('[exportToExcel] Error:', err);
+            alert(`เกิดข้อผิดพลาดในการสร้างไฟล์ Excel:\n${err.message}`);
+            if (btn) {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        }
+    }
+
+    // Wire up the Excel export button
+    const btnExportExcel = document.getElementById('btn-export-excel');
+    if (btnExportExcel) {
+        btnExportExcel.addEventListener('click', exportToExcel);
     }
 
     async function initApp() {

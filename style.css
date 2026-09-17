@@ -1,7 +1,7 @@
 /* ==========================================================================
    Modern Flat Admin Dashboard Design System - CSE Walailak University
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap');
 
 /* ==========================================================================
    CSS Variables & Color Palettes (Light & Dark Modes)
@@ -10,12 +10,12 @@
     /* Backgrounds */
     --bg-main: #f3f4f7;
     --bg-card: #ffffff;
-    --bg-topbar: #ffffff;
+    --bg-topbar: rgba(255, 255, 255, 0.85);
     --bg-sidebar: #212631;
     --sidebar-text: #e2e8f0;
     --sidebar-muted: #94a3b8;
     --sidebar-hover: rgba(255, 255, 255, 0.08);
-    --sidebar-active-bg: #2563eb;
+    --sidebar-active-bg: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     --sidebar-active-text: #ffffff;
     
     /* Text Colors */
@@ -58,12 +58,12 @@
     /* Backgrounds (Deep Navy) */
     --bg-main: #0c121e;
     --bg-card: #151d2e;
-    --bg-topbar: #151d2e;
+    --bg-topbar: rgba(21, 29, 46, 0.85);
     --bg-sidebar: #0b1120;
     --sidebar-text: #f8fafc;
     --sidebar-muted: #94a3b8;
     --sidebar-hover: rgba(16, 185, 129, 0.12);
-    --sidebar-active-bg: #10b981;
+    --sidebar-active-bg: linear-gradient(135deg, #10b981 0%, #059669 100%);
     --sidebar-active-text: #ffffff;
     
     /* Text Colors (White & Light Gray) */
@@ -103,7 +103,7 @@
 }
 
 /* ==========================================================================
-   Global Reset & Base Styles
+   Global Reset & Base Styles (Typography with Noto Sans Thai)
    ========================================================================== */
 * {
     box-sizing: border-box;
@@ -116,7 +116,7 @@ html {
 }
 
 body {
-    font-family: 'Sarabun', 'Outfit', system-ui, -apple-system, sans-serif;
+    font-family: 'Noto Sans Thai', 'Outfit', 'Prompt', 'Sarabun', system-ui, -apple-system, sans-serif;
     background-color: var(--bg-main);
     color: var(--text-primary);
     min-height: 100vh;
@@ -127,17 +127,22 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+button, input, select, textarea {
+    font-family: inherit;
+}
+
 /* ==========================================================================
    App Layout Structure (Sidebar + Main Content Area)
    ========================================================================== */
-.app-layout {
+.app, .app-layout {
     display: flex;
     min-height: 100vh;
     width: 100%;
+    background: var(--bg-main);
 }
 
 /* Left Sidebar */
-.app-sidebar {
+.sidebar, .app-sidebar {
     width: 260px;
     min-width: 260px;
     background: var(--bg-sidebar);
@@ -148,7 +153,7 @@ body {
     bottom: 0;
     left: 0;
     z-index: 100;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -158,6 +163,7 @@ body {
     align-items: center;
     gap: 14px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: padding 0.3s ease, justify-content 0.3s ease;
 }
 
 .brand-logo {
@@ -165,12 +171,14 @@ body {
     height: 42px;
     object-fit: contain;
     border-radius: 8px;
+    flex-shrink: 0;
 }
 
 .brand-text {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    transition: opacity 0.2s ease;
 }
 
 .brand-title {
@@ -197,6 +205,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    transition: padding 0.3s ease;
 }
 
 .nav-section-label {
@@ -206,6 +215,8 @@ body {
     letter-spacing: 0.8px;
     color: var(--sidebar-muted);
     padding: 6px 14px 4px;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
 }
 
 .sidebar-link {
@@ -218,7 +229,9 @@ body {
     text-decoration: none;
     font-size: 0.92rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .sidebar-link:hover {
@@ -229,11 +242,11 @@ body {
 .sidebar-link.active {
     background: var(--sidebar-active-bg);
     color: var(--sidebar-active-text);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
 body.dark-theme .sidebar-link.active {
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
 }
 
 .sidebar-link .nav-icon {
@@ -241,11 +254,18 @@ body.dark-theme .sidebar-link.active {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, font-size 0.3s ease;
+}
+
+.sidebar-link:hover .nav-icon {
+    transform: scale(1.12);
 }
 
 .sidebar-link .nav-text {
     flex: 1;
     white-space: nowrap;
+    transition: opacity 0.2s ease;
 }
 
 .badge-external {
@@ -253,12 +273,14 @@ body.dark-theme .sidebar-link.active {
     opacity: 0.7;
 }
 
+/* Sidebar Footer & Collapse Button */
 .sidebar-footer {
-    padding: 16px 20px;
+    padding: 16px 18px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+    transition: padding 0.3s ease, align-items 0.3s ease;
 }
 
 .system-status-indicator {
@@ -276,31 +298,139 @@ body.dark-theme .sidebar-link.active {
     border-radius: 50%;
     background: #10b981;
     box-shadow: 0 0 8px #10b981;
+    flex-shrink: 0;
+}
+
+.system-status-text {
+    white-space: nowrap;
 }
 
 .version-text {
     font-size: 0.72rem;
     color: var(--sidebar-muted);
+    white-space: nowrap;
 }
 
-/* Sidebar overlay for mobile */
-.sidebar-overlay {
+.sidebar-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+    padding: 9px 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--sidebar-text);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--sidebar-hover);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-toggle-btn .collapse-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Desktop Mini Sidebar Mode (.app.mini)
+   ========================================================================== */
+.app.mini .sidebar, .app.mini .app-sidebar {
+    width: 84px;
+    min-width: 84px;
+}
+
+.app.mini .main, .app.mini .app-wrapper {
+    margin-left: 84px;
+}
+
+.app.mini .brand-text,
+.app.mini .nav-text,
+.app.mini .nav-section-label,
+.app.mini .system-status-text,
+.app.mini .version-text,
+.app.mini .collapse-text {
+    display: none !important;
+}
+
+.app.mini .sidebar-brand {
+    padding: 18px 0;
+    justify-content: center;
+}
+
+.app.mini .sidebar-nav {
+    padding: 16px 10px;
+}
+
+.app.mini .sidebar-link {
+    padding: 12px;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.app.mini .sidebar-link .nav-icon {
+    font-size: 1.35rem;
+    margin: 0;
+}
+
+.app.mini .sidebar-footer {
+    padding: 14px 10px;
+    align-items: center;
+}
+
+.app.mini .system-status-indicator {
+    justify-content: center;
+}
+
+.app.mini .sidebar-toggle-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 8px;
+}
+
+.app.mini .sidebar-toggle-btn .collapse-icon {
+    transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   Scrim / Backdrop for Mobile Drawer
+   ========================================================================== */
+.scrim, .sidebar-overlay {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 95;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 990;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scrim.active, .sidebar-overlay.active,
+.scrim.open, .sidebar-overlay.open {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* ==========================================================================
-   Main Content Wrapper & Top Navbar
+   Main Content Wrapper & Glassmorphism Top Navbar
    ========================================================================== */
-.app-wrapper {
+.main, .app-wrapper {
     flex: 1;
     margin-left: 260px;
     display: flex;
@@ -308,13 +438,15 @@ body.dark-theme .sidebar-link.active {
     min-width: 0;
     min-height: 100vh;
     background-color: var(--bg-main);
-    transition: margin-left 0.3s ease;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Top Navbar */
+/* Top Navbar with Glassmorphism */
 .app-topbar {
     height: 70px;
     background: var(--bg-topbar);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border-color);
     padding: 0 32px;
     display: flex;
@@ -323,8 +455,12 @@ body.dark-theme .sidebar-link.active {
     position: sticky;
     top: 0;
     z-index: 90;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
     transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-theme .app-topbar {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .topbar-left {
@@ -334,16 +470,39 @@ body.dark-theme .sidebar-link.active {
     min-width: 0;
 }
 
-.btn-sidebar-toggle {
+/* Hamburger Menu Button (3-line modern bar icon) */
+.hamburger-btn, .btn-sidebar-toggle {
     display: none;
-    background: transparent;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    background: var(--bg-main);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 1.2rem;
-    color: var(--text-primary);
+    border-radius: 9px;
+    padding: 8px;
     cursor: pointer;
     line-height: 1;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+.hamburger-btn:hover, .btn-sidebar-toggle:hover {
+    border-color: var(--primary);
+    background: var(--bg-card);
+    transform: scale(1.05);
+}
+
+.hamburger-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+    transition: all 0.3s ease;
 }
 
 .topbar-title-wrap {
@@ -417,46 +576,121 @@ body.dark-theme .sidebar-link.active {
 }
 
 /* ==========================================================================
-   Main Container & Flat Admin Cards
+   Main Container & ProTrack 12-Column Grid System
    ========================================================================== */
 .app-main {
     flex: 1;
     width: 100%;
 }
 
-.content-container {
+.content, .content-container {
     padding: 28px 32px;
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
     width: 100%;
     max-width: 1600px;
     margin: 0 auto;
 }
 
-/* Flat Admin Card - No Glassmorphism Blur */
-.admin-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    box-shadow: var(--card-shadow);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+/* 12-Column Grid System */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+    width: 100%;
 }
 
-.admin-card:hover {
+.c1  { grid-column: span 1; }
+.c2  { grid-column: span 2; }
+.c3  { grid-column: span 3; }
+.c4  { grid-column: span 4; }
+.c5  { grid-column: span 5; }
+.c6  { grid-column: span 6; }
+.c7  { grid-column: span 7; }
+.c8  { grid-column: span 8; }
+.c9  { grid-column: span 9; }
+.c10 { grid-column: span 10; }
+.c11 { grid-column: span 11; }
+.c12 { grid-column: span 12; }
+
+@media (max-width: 1024px) {
+    .c4 { grid-column: span 6; }
+    .c6 { grid-column: span 12; }
+    .c3 { grid-column: span 6; }
+}
+
+@media (max-width: 640px) {
+    .grid { gap: 12px; }
+    .c1, .c2, .c3, .c4, .c5, .c6, .c7, .c8, .c9, .c10, .c11, .c12 {
+        grid-column: span 12 !important;
+    }
+}
+
+/* ==========================================================================
+   SPA Page Section & Fade Animation
+   ========================================================================== */
+.page, .spa-section {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.page.active, .spa-section.active {
+    display: flex !important;
+    animation: fade 0.35s ease forwards;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   Card System (.card, .admin-card, .card-h)
+   ========================================================================== */
+.card, .admin-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+    min-width: 0;
+}
+
+.card:hover, .admin-card:hover {
     box-shadow: var(--card-shadow-hover);
 }
 
-body.dark-theme .admin-card:hover {
+body.dark-theme .card:hover, body.dark-theme .admin-card:hover {
     border-color: var(--border-hover);
 }
 
-/* Section Header */
-.section-header {
+.card-h, .section-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 22px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-h h2, .card-h h3, .section-header h2, .section-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
 }
 
 .section-header h2 {
@@ -1775,55 +2009,204 @@ body.dark-theme .accordion-item:hover {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Excel Export Button (.btn-excel)
    ========================================================================== */
-@media (max-width: 992px) {
-    .app-sidebar {
+.btn-excel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.2px;
+}
+
+.btn-excel:hover {
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.48);
+}
+
+.btn-excel:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+}
+
+.btn-excel:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-excel .btn-excel-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints (Mobile & Tablet Responsiveness)
+   ========================================================================== */
+
+/* Tablet & Mobile Off-canvas Drawer (<= 1080px) */
+@media (max-width: 1080px) {
+    .sidebar, .app-sidebar {
         transform: translateX(-100%);
+        z-index: 1000;
+        width: 270px;
+        min-width: 270px;
+        box-shadow: none;
     }
 
-    .app-sidebar.sidebar-open {
+    .sidebar.open, .app-sidebar.open,
+    .sidebar.sidebar-open, .app-sidebar.sidebar-open {
         transform: translateX(0);
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.65);
     }
 
-    .sidebar-overlay.active {
+    .scrim.active, .sidebar-overlay.active,
+    .scrim.open, .sidebar-overlay.open {
         display: block;
         opacity: 1;
+        pointer-events: auto;
     }
 
-    .app-wrapper {
+    .main, .app-wrapper {
         margin-left: 0 !important;
     }
 
-    .btn-sidebar-toggle {
-        display: inline-flex;
+    .hamburger-btn, .btn-sidebar-toggle {
+        display: flex !important;
+    }
+
+    .sidebar-toggle-btn {
+        display: none !important; /* Hide desktop mini-toggle on mobile off-canvas drawer */
+    }
+
+    .app.mini .sidebar, .app.mini .app-sidebar {
+        width: 270px;
+        min-width: 270px;
+    }
+    .app.mini .brand-text,
+    .app.mini .nav-text,
+    .app.mini .nav-section-label,
+    .app.mini .system-status-text,
+    .app.mini .version-text {
+        display: flex !important;
+    }
+    .app.mini .sidebar-link {
+        justify-content: flex-start;
+        padding: 11px 16px;
     }
 
     .app-topbar {
-        padding: 0 18px;
+        padding: 0 20px;
     }
 
-    .content-container {
-        padding: 20px 16px;
+    .content, .content-container {
+        padding: 22px 18px;
         gap: 20px;
     }
 }
 
-@media (max-width: 640px) {
+/* Mobile & Tablet Full Column Stacking (<= 820px) */
+@media (max-width: 820px) {
+    .grid {
+        gap: 14px;
+    }
+
+    .c1, .c2, .c3, .c4, .c5, .c6, .c7, .c8, .c9, .c10, .c11, .c12 {
+        grid-column: span 12 !important;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content, .content-container {
+        padding: 16px 12px;
+        gap: 16px;
+    }
+
+    .app-topbar {
+        padding: 0 14px;
+        height: 64px;
+    }
+
     .topbar-page-title {
-        font-size: 0.95rem;
+        font-size: 0.98rem;
     }
+
     .topbar-breadcrumb {
-        display: none;
+        font-size: 0.74rem;
     }
+
     .date-badge {
         display: none;
     }
+
+    .card, .admin-card {
+        padding: 16px 14px;
+    }
+
+    .tracking-metrics-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-select, .search-wrapper, .btn-clear {
+        width: 100%;
+    }
+
+    .file-list-simple li strong {
+        min-width: 100%;
+    }
+
+    .file-list-simple li span {
+        min-width: 100%;
+    }
+}
+
+/* Small Phones (<= 480px) */
+@media (max-width: 480px) {
+    .tracking-metrics-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .topbar-breadcrumb {
+        display: none;
+    }
+
     .theme-label {
         display: none;
     }
+
     .theme-toggle-btn {
-        padding: 8px 12px;
+        padding: 8px 10px;
+    }
+
+    .pagination {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .modal-content {
+        padding: 20px 16px;
+        width: 96%;
     }
 }

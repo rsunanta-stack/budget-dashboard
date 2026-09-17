@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSE WU - ระบบงบลงทุนและแผนจัดซื้อจัดจ้าง 2570</title>
+    <!-- Google Fonts: Noto Sans Thai, Prompt, Outfit, Sarabun -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
 <body data-theme="dark" class="dark-theme">
 
-    <div class="app-layout">
+    <div class="app app-layout" id="app-root">
         
         <!-- Sidebar ด้านซ้าย -->
-        <aside class="app-sidebar" id="app-sidebar">
+        <aside class="sidebar app-sidebar" id="app-sidebar">
             <div class="sidebar-brand">
                 <img src="logo.png" alt="CSE Walailak University Logo" class="brand-logo" onerror="this.style.display='none'">
                 <div class="brand-text">
@@ -47,23 +51,32 @@
             <div class="sidebar-footer">
                 <div class="system-status-indicator">
                     <span class="status-dot"></span>
-                    <span>งบลงทุน พ.ศ. 2570</span>
+                    <span class="system-status-text">งบลงทุน พ.ศ. 2570</span>
                 </div>
                 <small class="version-text">Modern Admin Dashboard</small>
+                
+                <!-- Desktop Sidebar Collapse/Expand Toggle -->
+                <button class="sidebar-toggle-btn" id="sidebar-collapse-btn" title="ย่อ/ขยายเมนู (Mini Sidebar)">
+                    <span class="collapse-icon">◀</span>
+                    <span class="collapse-text">ย่อแถบเมนู</span>
+                </button>
             </div>
         </aside>
 
-        <!-- Sidebar Overlay for mobile -->
-        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <!-- Scrim / Backdrop for Mobile Drawer -->
+        <div class="scrim sidebar-overlay" id="scrim"></div>
 
         <!-- Main Wrapper (Top Navbar + Content + Footer) -->
-        <div class="app-wrapper">
+        <div class="main app-wrapper" id="app-wrapper">
             
             <!-- Top Navbar ด้านบน -->
             <header class="app-topbar">
                 <div class="topbar-left">
-                    <button class="btn-sidebar-toggle" id="sidebar-toggle" title="เปิด/ปิด เมนูด้านข้าง">
-                        <span class="toggle-icon-bar">☰</span>
+                    <!-- Hamburger Menu Button (Shown on mobile/tablet) -->
+                    <button class="hamburger-btn btn-sidebar-toggle" id="hamburger-btn" aria-label="เปิดเมนูนำทาง" title="เปิด/ปิด เมนูด้านข้าง">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
                     </button>
                     <div class="topbar-title-wrap">
                         <h2 class="topbar-page-title" id="topbar-page-title">ระบบงบลงทุนและแผนจัดซื้อจัดจ้าง 2570</h2>
@@ -86,14 +99,14 @@
             </header>
 
             <!-- Main Content Area -->
-            <main class="app-main" id="dashboard-top">
-                <div class="content-container">
-
-                    <!-- Section 1: ภาพรวมงบประมาณ (Overview) -->
-                    <section class="spa-section" id="overview-section">
-                        <!-- Timeline Section -->
-                        <div class="admin-card timeline-section" id="timeline-section">
-                            <div class="section-header">
+            <main class="content content-container" id="dashboard-top">
+                
+                <!-- Section 1: ภาพรวมงบประมาณ (Overview) -->
+                <section class="page active" id="overview-section">
+                    <div class="grid">
+                        <!-- Timeline Section (Full 12 columns) -->
+                        <div class="card c12 timeline-section" id="timeline-section">
+                            <div class="card-h section-header">
                                 <h2>
                                     <span>⏰</span> แผนการจัดซื้อจัดจ้าง งบลงทุนประจำปีงบประมาณ พ.ศ. 2570
                                 </h2>
@@ -143,64 +156,58 @@
                             </div>
                         </div>
 
-                        <!-- Metrics Overview Section (Solid Colors) -->
-                        <div class="metrics-grid" id="metrics-overview">
-                            
-                            <!-- Metric 1: Indigo/Deep Blue Solid (#4f46e5) -->
-                            <div class="metric-card card-solid-indigo">
-                                <div class="metric-header">
-                                    <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
-                                    <div class="metric-icon">🔬</div>
-                                </div>
-                                <div class="metric-value" id="val-tech-budget">กำลังโหลด...</div>
-                                <div class="metric-subtext" id="val-tech-count">- รายการ</div>
+                        <!-- Metric 1: Indigo/Deep Blue Solid (#4f46e5) (Span 4) -->
+                        <div class="card c4 metric-card card-solid-indigo">
+                            <div class="metric-header">
+                                <span>งบอนุมัติวิทยาศาสตร์และเทคโนโลยี</span>
+                                <div class="metric-icon">🔬</div>
                             </div>
-
-                            <!-- Metric 2: Teal Solid (#0d9488) -->
-                            <div class="metric-card card-solid-teal">
-                                <div class="metric-header">
-                                    <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
-                                    <div class="metric-icon">🏥</div>
-                                </div>
-                                <div class="metric-value" id="val-health-budget">กำลังโหลด...</div>
-                                <div class="metric-subtext" id="val-health-count">- รายการ</div>
-                            </div>
-
-                            <!-- Metric 3: Amber/Orange Solid (#d97706) -->
-                            <div class="metric-card card-solid-orange">
-                                <div class="metric-header">
-                                    <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
-                                    <div class="metric-icon">💰</div>
-                                </div>
-                                <div class="metric-value" id="val-total-budget">กำลังโหลด...</div>
-                                <div class="metric-subtext" id="val-total-count">- รายการ</div>
-                            </div>
-
+                            <div class="metric-value" id="val-tech-budget">กำลังโหลด...</div>
+                            <div class="metric-subtext" id="val-tech-count">- รายการ</div>
                         </div>
 
-                        <!-- Charts Grid Section -->
-                        <div class="charts-grid">
-                            
-                            <div class="admin-card chart-card">
-                                <h3 class="chart-title">สัดส่วนงบประมาณแยกตามสาขา (Budget Share)</h3>
-                                <div class="chart-wrapper">
-                                    <canvas id="chart-share"></canvas>
-                                </div>
+                        <!-- Metric 2: Teal Solid (#0d9488) (Span 4) -->
+                        <div class="card c4 metric-card card-solid-teal">
+                            <div class="metric-header">
+                                <span>งบอนุมัติวิทยาศาสตร์สุขภาพ</span>
+                                <div class="metric-icon">🏥</div>
                             </div>
-
-                            <div class="admin-card chart-card">
-                                <h3 class="chart-title">งบประมาณรวมแยกตามหน่วยงาน/สำนักวิชา</h3>
-                                <div class="chart-wrapper">
-                                    <canvas id="chart-schools"></canvas>
-                                </div>
-                            </div>
-
+                            <div class="metric-value" id="val-health-budget">กำลังโหลด...</div>
+                            <div class="metric-subtext" id="val-health-count">- รายการ</div>
                         </div>
-                    </section>
 
-                    <!-- Section 2: กระดานติดตามสถานะเอกสาร -->
-                    <section class="admin-card tracking-section spa-section" id="tracking-section" style="display: none;">
-                        <div class="section-header">
+                        <!-- Metric 3: Amber/Orange Solid (#d97706) (Span 4) -->
+                        <div class="card c4 metric-card card-solid-orange">
+                            <div class="metric-header">
+                                <span>งบลงทุนครุภัณฑ์รวมทั้งหมด</span>
+                                <div class="metric-icon">💰</div>
+                            </div>
+                            <div class="metric-value" id="val-total-budget">กำลังโหลด...</div>
+                            <div class="metric-subtext" id="val-total-count">- รายการ</div>
+                        </div>
+
+                        <!-- Chart 1 (Span 6) -->
+                        <div class="card c6 chart-card">
+                            <h3 class="chart-title">สัดส่วนงบประมาณแยกตามสาขา (Budget Share)</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-share"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Chart 2 (Span 6) -->
+                        <div class="card c6 chart-card">
+                            <h3 class="chart-title">งบประมาณรวมแยกตามหน่วยงาน/สำนักวิชา</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="chart-schools"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: กระดานติดตามสถานะเอกสาร -->
+                <section class="page" id="tracking-section">
+                    <div class="card c12 tracking-section">
+                        <div class="card-h section-header">
                             <h2><span>📋</span> กระดานติดตามสถานะการจัดทำเอกสาร</h2>
                         </div>
 
@@ -316,13 +323,18 @@
                             </table>
                         </div>
 
-                    </section>
+                    </div>
+                </section>
 
-                    <!-- Section 3: ข้อมูลรายการครุภัณฑ์ (Data Grid) -->
-                    <section class="admin-card data-section spa-section" id="datagrid-section" style="display: none;">
-                        
-                        <div class="section-header">
+                <!-- Section 3: ข้อมูลรายการครุภัณฑ์ (Data Grid) -->
+                <section class="page" id="datagrid-section">
+                    <div class="card c12 data-section">
+                        <div class="card-h section-header">
                             <h2><span>🔍</span> รายการครุภัณฑ์ทั้งหมด</h2>
+                            <button class="btn-excel" id="btn-export-excel" title="ดาวน์โหลดข้อมูลที่กำลังแสดงอยู่เป็นไฟล์ Excel">
+                                <span class="btn-excel-icon">⬇️</span>
+                                <span class="btn-excel-text">ดาวน์โหลด Excel</span>
+                            </button>
                         </div>
 
                         <!-- Filters Bar -->
@@ -381,11 +393,13 @@
                             </div>
                         </div>
 
-                    </section>
+                    </div>
+                </section>
 
-                    <!-- Section 4: แบบฟอร์มการจัดซื้อ (Forms) -->
-                    <section class="admin-card forms-section spa-section" id="forms-section" style="display: none;">
-                        <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 24px;">
+                <!-- Section 4: แบบฟอร์มการจัดซื้อ (Forms) -->
+                <section class="page" id="forms-section">
+                    <div class="card c12 forms-section">
+                        <div class="card-h section-header" style="flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 24px;">
                             <h2><span>📁</span> แบบฟอร์มการจัดซื้อ</h2>
                             <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem;">คลิกเลือกวิธีจัดซื้อ เพื่อดูคำอธิบายและเข้าสู่โฟลเดอร์ดาวน์โหลดเอกสาร (Google Drive)</p>
                         </div>
@@ -463,9 +477,9 @@
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
 
-                </div>
             </main>
 
             <!-- Footer Section -->
@@ -565,6 +579,8 @@
 
     <!-- Data script followed by logic script -->
     <script src="data.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
