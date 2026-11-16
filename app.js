@@ -673,7 +673,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 label: s
             };
         }
-        if (s.includes('PR Manual') || s.includes('ออก PR')) {
+        if (s.includes('ออก PR')) {
             return {
                 className: 'badge-status-pr',
                 label: s
@@ -1110,7 +1110,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     countSent++;
                 } else if (status.includes('จัดซื้อเอง') || status.includes('ศคว.')) {
                     countSelf++;
-                } else if (status.includes('PR Manual') || status.includes('ออก PR') || lower.includes('pr')) {
+                } else if (status.includes('ออก PR') || lower.includes('pr')) {
                     countPr++;
                 } else if (status.includes('TOR') || status.includes('ราคากลาง')) {
                     countTor++;
