@@ -3,6 +3,7 @@
 const SHEET_ID = "1TE7ksPMwn6xvt6yEt8j06IHvTtpfoqyLycqu0DvJmNo";
 const SHEET_NAME_1 = "วิทย์เทค(แบบแยก)";
 const SHEET_NAME_2 = "วิทย์สุข(แบบแยก)";
+const SHEET_NAME_CONSTRUCTION = "งบปรับปรุง";
 
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -10,12 +11,16 @@ document.addEventListener("DOMContentLoaded", () => {
         enabled: true,
         spreadsheetId: SHEET_ID,
         techSheetName: SHEET_NAME_1,
-        healthSheetName: SHEET_NAME_2
+        healthSheetName: SHEET_NAME_2,
+        constructionSheetName: SHEET_NAME_CONSTRUCTION
     };
 
     const state = {
         items: [],
         filteredItems: [],
+        constructionItems: [],
+        constructionFetchFailed: false,
+        constructionSearch: '',
         currentPage: 1,
         pageSize: 10,
         sortColumn: null,
@@ -112,9 +117,16 @@ document.addEventListener("DOMContentLoaded", () => {
         overviewSection: document.getElementById("overview-section"),
         trackingSection: document.getElementById("tracking-section"),
         datagridSection: document.getElementById("datagrid-section"),
+        constructionSection: document.getElementById("construction-section"),
         formsSection: document.getElementById("forms-section"),
         topbarTitle: document.getElementById("topbar-page-title"),
-        topbarBreadcrumb: document.getElementById("topbar-breadcrumb")
+        topbarBreadcrumb: document.getElementById("topbar-breadcrumb"),
+
+        valConstructionBudget: document.getElementById("val-construction-budget"),
+        valConstructionCount: document.getElementById("val-construction-count"),
+        constructionSearchInput: document.getElementById("construction-search-input"),
+        constructionTableBody: document.getElementById("construction-table-body"),
+        constructionTableFoot: document.getElementById("construction-table-foot")
     };
 
     const TODAY = new Date();
@@ -244,6 +256,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     </td>
                 </tr>
             `;
+        }
+
+        if (elements.valConstructionBudget) elements.valConstructionBudget.textContent = "กำลังโหลด...";
+        if (elements.valConstructionCount) elements.valConstructionCount.textContent = "- รายการ";
+        if (elements.constructionTableBody) {
+            elements.constructionTableBody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 40px; color: var(--text-secondary);">
+                        🔄 กำลังเชื่อมต่อและโหลดข้อมูลสิ่งก่อสร้าง...
+                    </td>
+                </tr>
+            `;
+        }
+        if (elements.constructionTableFoot) {
+            elements.constructionTableFoot.innerHTML = '';
         }
     }
 
@@ -1025,6 +1052,148 @@ document.addEventListener("DOMContentLoaded", () => {
         return items;
     }
 
+    function parseConstructionTable(table) {
+        const items = [];
+        const rows = (table && table.rows) ? table.rows : [];
+
+        for (let r = 0; r < rows.length; r++) {
+            const row = rows[r];
+            if (!row || !row.c) continue;
+
+            const cells = row.c;
+            const priority = cleanText(cells[0]);
+            const name = cleanText(cells[3]);
+
+            const isNumeric = priority !== "" && !isNaN(parseFloat(priority)) && isFinite(priority);
+            if (!isNumeric || !name) continue;
+
+            const category = cleanText(cells[1]);
+            const workGroup = cleanText(cells[2]);
+            const unit = cleanText(cells[4]);
+            const quantity = parsePrice(cells[5]);
+            const unitPrice = parsePrice(cells[6]);
+            const rawTotal = parsePrice(cells[7]);
+            const totalPrice = rawTotal > 0 ? rawTotal : (quantity * unitPrice);
+            const specMaker = cleanText(cells[8]);
+            const docStatusRaw = cleanText(cells[9]);
+            const docStatus = docStatusRaw || 'รอดำเนินการ (ยังไม่เริ่ม)';
+
+            items.push({
+                id: `construction-${r + 1}`,
+                priority: priority,
+                category: category,
+                workGroup: workGroup,
+                name: name,
+                unit: unit,
+                quantity: quantity,
+                unitPrice: unitPrice,
+                totalPrice: totalPrice,
+                specMaker: specMaker,
+                docStatus: docStatus
+            });
+        }
+
+        console.log(`[Google Sheets] Clean parsed construction items count: ${items.length} items`);
+        return items;
+    }
+
+    function renderConstruction() {
+        const allItems = state.constructionItems || [];
+        let totalBudgetAll = 0;
+        allItems.forEach(item => {
+            totalBudgetAll += (item.totalPrice || 0);
+        });
+
+        if (elements.valConstructionBudget) {
+            elements.valConstructionBudget.textContent = `${formatNumber(totalBudgetAll)} ฿`;
+        }
+        if (elements.valConstructionCount) {
+            elements.valConstructionCount.textContent = `${formatNumber(allItems.length)} รายการ`;
+        }
+
+        const tbody = elements.constructionTableBody;
+        const tfoot = elements.constructionTableFoot;
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+        if (tfoot) tfoot.innerHTML = '';
+
+        if (state.constructionFetchFailed || allItems.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 40px; color: var(--text-secondary);">
+                        ไม่พบข้อมูลสิ่งก่อสร้าง
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        const query = (state.constructionSearch || '').toLowerCase().trim();
+        const filtered = allItems.filter(item => {
+            if (!query) return true;
+            const n = (item.name || '').toLowerCase();
+            const s = (item.specMaker || '').toLowerCase();
+            const d = (item.docStatus || '').toLowerCase();
+            return n.includes(query) || s.includes(query) || d.includes(query);
+        });
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 40px; color: var(--text-secondary);">
+                        ❌ ไม่พบรายการสิ่งก่อสร้างที่ตรงกับคำค้นหา
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        let filteredTotalPrice = 0;
+        let filteredTotalQty = 0;
+
+        filtered.forEach(item => {
+            filteredTotalPrice += (item.totalPrice || 0);
+            filteredTotalQty += (item.quantity || 0);
+
+            const row = document.createElement("tr");
+            row.className = "table-row-parent";
+
+            const badgeStatus = getDocStatusBadge(item.docStatus);
+            const qtyDisplay = item.quantity > 0
+                ? `${formatNumber(item.quantity)}${item.unit ? ' ' + item.unit : ''}`
+                : (item.unit || '-');
+            const unitPriceDisplay = item.unitPrice > 0 ? `${formatNumber(item.unitPrice)} ฿` : '-';
+            const totalPriceDisplay = item.totalPrice > 0 ? `${formatNumber(item.totalPrice)} ฿` : '-';
+
+            row.innerHTML = `
+                <td class="text-center" style="font-weight:700; color:var(--text-secondary);">${item.priority || "-"}</td>
+                <td>${item.category || "-"}</td>
+                <td>${item.workGroup || "-"}</td>
+                <td style="font-weight:600; line-height:1.5;">${item.name || "-"}</td>
+                <td class="text-center">${qtyDisplay}</td>
+                <td class="number-col">${unitPriceDisplay}</td>
+                <td class="number-col" style="color:var(--secondary); font-weight:700;">${totalPriceDisplay}</td>
+                <td>${item.specMaker || "-"}</td>
+                <td class="text-center"><span class="badge ${badgeStatus.className}">${badgeStatus.label}</span></td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+        if (tfoot) {
+            tfoot.innerHTML = `
+                <tr style="background: var(--bg-main); font-weight: 700; border-top: 2px solid var(--border-color);">
+                    <td colspan="4" class="text-center" style="padding: 14px 16px; color: var(--text-primary);">รวมทั้งสิ้น (${formatNumber(filtered.length)} รายการ)</td>
+                    <td class="text-center" style="padding: 14px 16px; color: var(--text-primary);">${filteredTotalQty > 0 ? formatNumber(filteredTotalQty) : "-"}</td>
+                    <td class="number-col" style="padding: 14px 16px; color: var(--text-secondary);">-</td>
+                    <td class="number-col" style="padding: 14px 16px; color: var(--secondary); font-size: 1.02rem;">${formatNumber(filteredTotalPrice)} ฿</td>
+                    <td colspan="2"></td>
+                </tr>
+            `;
+        }
+    }
+
     async function loadDataset() {
         if (GOOGLE_SHEETS_CONFIG.enabled && GOOGLE_SHEETS_CONFIG.spreadsheetId) {
             try {
@@ -1064,11 +1233,28 @@ document.addEventListener("DOMContentLoaded", () => {
             loadLocalFallback();
         }
 
+        // Fetch Construction Tab ("งบปรับปรุง") in a separate try/catch so it never blocks equipment items
+        if (GOOGLE_SHEETS_CONFIG.enabled && GOOGLE_SHEETS_CONFIG.spreadsheetId) {
+            try {
+                const constructionTable = await fetchSheetData(GOOGLE_SHEETS_CONFIG.spreadsheetId, GOOGLE_SHEETS_CONFIG.constructionSheetName);
+                state.constructionItems = parseConstructionTable(constructionTable);
+                state.constructionFetchFailed = false;
+            } catch (constructionErr) {
+                console.error("Google Sheets construction tab fetch failed:", constructionErr);
+                state.constructionItems = [];
+                state.constructionFetchFailed = true;
+            }
+        } else {
+            state.constructionItems = [];
+            state.constructionFetchFailed = true;
+        }
+
         state.filteredItems = [...state.items];
         updateKPIs();
         initFilterOptions();
         renderTable();
         renderTracking();
+        renderConstruction();
     }
 
     function loadLocalFallback() {
@@ -1353,7 +1539,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTable();
     }
 
-    const SECTION_IDS = ['overview-section', 'tracking-section', 'datagrid-section', 'forms-section'];
+    const SECTION_IDS = ['overview-section', 'tracking-section', 'datagrid-section', 'construction-section', 'forms-section'];
 
     const TAB_INFO = {
         'overview-section': {
@@ -1367,6 +1553,10 @@ document.addEventListener("DOMContentLoaded", () => {
         'datagrid-section': {
             title: 'ข้อมูลรายการครุภัณฑ์ทั้งหมด',
             breadcrumb: 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · รายการครุภัณฑ์'
+        },
+        'construction-section': {
+            title: 'ข้อมูลสิ่งก่อสร้าง',
+            breadcrumb: 'ศูนย์เครื่องมือวิทยาศาสตร์และเทคโนโลยี · สิ่งก่อสร้าง'
         },
         'forms-section': {
             title: 'แบบฟอร์มการจัดซื้อ',
@@ -1548,6 +1738,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    if (elements.constructionSearchInput) {
+        elements.constructionSearchInput.addEventListener("input", (e) => {
+            state.constructionSearch = e.target.value;
+            renderConstruction();
+        });
+    }
+
     if (elements.filterType) {
         elements.filterType.addEventListener("change", (e) => {
             state.filters.type = e.target.value;
@@ -1724,6 +1921,7 @@ document.addEventListener("DOMContentLoaded", () => {
         initFilterOptions();
         renderTable();
         renderTracking();
+        renderConstruction();
 
         // 3. switchTab is executed at the very last step after all DOM elements are populated
         switchTab('overview-section');

@@ -40,6 +40,10 @@
                     <span class="nav-icon">📦</span>
                     <span class="nav-text">ข้อมูลรายการครุภัณฑ์</span>
                 </a>
+                <a href="#construction-section" class="sidebar-link" data-tab="construction-section">
+                    <span class="nav-icon">🏗️</span>
+                    <span class="nav-text">ข้อมูลสิ่งก่อสร้าง</span>
+                </a>
 
                 <div class="nav-section-label" style="margin-top: 24px;">แบบฟอร์ม & เอกสาร</div>
                 <a href="#forms-section" class="sidebar-link" data-tab="forms-section" id="nav-forms">
@@ -393,6 +397,71 @@
                             </div>
                         </div>
 
+                    </div>
+                </section>
+
+                <!-- Section 3.5: ข้อมูลสิ่งก่อสร้าง (Construction) -->
+                <section class="page" id="construction-section">
+                    <div class="grid">
+                        <!-- Summary Card 1: งบสิ่งก่อสร้างรวมทั้งหมด -->
+                        <div class="card c6 metric-card card-solid-indigo">
+                            <div class="metric-header">
+                                <span>งบสิ่งก่อสร้างรวมทั้งหมด</span>
+                                <div class="metric-icon">🏗️</div>
+                            </div>
+                            <div class="metric-value" id="val-construction-budget">กำลังโหลด...</div>
+                            <div class="metric-subtext">บาท (งบปรับปรุง พ.ศ. 2570)</div>
+                        </div>
+
+                        <!-- Summary Card 2: จำนวนรายการ -->
+                        <div class="card c6 metric-card card-solid-teal">
+                            <div class="metric-header">
+                                <span>จำนวนรายการ</span>
+                                <div class="metric-icon">📋</div>
+                            </div>
+                            <div class="metric-value" id="val-construction-count">- รายการ</div>
+                            <div class="metric-subtext">รายการสิ่งก่อสร้างและปรับปรุงทั้งหมด</div>
+                        </div>
+
+                        <!-- Construction Data Table Card -->
+                        <div class="card c12 data-section">
+                            <div class="card-h section-header">
+                                <h2><span>🏗️</span> รายการสิ่งก่อสร้าง (งบปรับปรุง)</h2>
+                            </div>
+
+                            <!-- Search Bar -->
+                            <div class="filter-bar">
+                                <div class="search-wrapper" style="flex: 1;">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" class="search-input" id="construction-search-input" placeholder="ค้นหาตามชื่อรายการ, ผู้รับผิดชอบ Spec หรือสถานะการทำเอกสาร...">
+                                </div>
+                            </div>
+
+                            <!-- Construction Table -->
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" style="width: 70px;">ลำดับ</th>
+                                            <th style="width: 150px;">หมวดงบลงทุน</th>
+                                            <th style="width: 160px;">ประเภท/กลุ่มงาน</th>
+                                            <th>ชื่อรายการ</th>
+                                            <th class="text-center" style="width: 110px;">จำนวน</th>
+                                            <th class="number-col" style="width: 150px;">ราคาต่อหน่วย</th>
+                                            <th class="number-col" style="width: 160px;">รวมเป็นเงิน</th>
+                                            <th style="width: 170px;">ผู้รับผิดชอบ Spec</th>
+                                            <th class="text-center" style="width: 220px;">สถานะการทำเอกสาร</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="construction-table-body">
+                                        <!-- Will be dynamically populated by app.js -->
+                                    </tbody>
+                                    <tfoot id="construction-table-foot">
+                                        <!-- Summary row populated by app.js -->
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
